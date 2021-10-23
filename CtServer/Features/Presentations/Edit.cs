@@ -18,6 +18,7 @@ namespace CtServer.Features.Presentations
         ) : IRequest<bool>;
         public record Model
         (
+            int SectionId,
             string Title,
             string[] Authors,
             string Description,
@@ -47,6 +48,7 @@ namespace CtServer.Features.Presentations
 
                 if (entity is null) return false;
 
+                entity.SectionId = request.Model.SectionId;
                 entity.Title = request.Model.Title;
                 entity.Authors = request.Model.Authors;
                 entity.Description = request.Model.Description;

@@ -18,6 +18,7 @@ namespace CtServer.Features.Sections
         ) : IRequest<bool>;
         public record Model
         (
+            int EventId,
             string Title,
             string Location,
             string[] Chairs,
@@ -46,6 +47,7 @@ namespace CtServer.Features.Sections
 
                 if (entity is null) return false;
 
+                entity.EventId = request.Model.EventId;
                 entity.Title = request.Model.Title;
                 entity.Location = request.Model.Location;
                 entity.Chairs = request.Model.Chairs;
