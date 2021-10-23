@@ -12,7 +12,6 @@ namespace CtServer.Features.Sections
     {
         public record Command
         (
-            int EventId,
             int Id
         ) : IRequest<bool>;
 
@@ -30,7 +29,6 @@ namespace CtServer.Features.Sections
 
                 var entity = await ctx.Sections
                     .AsQueryable()
-                    .Where(x => x.EventId == request.EventId)
                     .Where(x => x.Id == request.Id)
                     .FirstOrDefaultAsync(cancellationToken)
                     .ConfigureAwait(false);

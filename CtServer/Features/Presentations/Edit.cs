@@ -13,8 +13,6 @@ namespace CtServer.Features.Presentations
     {
         public record Command
         (
-            int EventId,
-            int SectionId,
             int Id,
             Model Model
         ) : IRequest<bool>;
@@ -43,8 +41,6 @@ namespace CtServer.Features.Presentations
 
                 var entity = await ctx.Presentations
                     .AsQueryable()
-                    .Where(x => x.Section.EventId == request.EventId)
-                    .Where(x => x.SectionId == request.SectionId)
                     .Where(x => x.Id == request.Id)
                     .FirstOrDefaultAsync(cancellationToken)
                     .ConfigureAwait(false);

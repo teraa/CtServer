@@ -12,12 +12,12 @@ namespace CtServer.Features.Sections
     {
         public record Command
         (
-            int EventId,
             Model Model
         ) : IRequest<Result>;
 
         public record Model
         (
+            int EventId,
             string Title,
             string Location,
             string[] Chairs,
@@ -39,7 +39,7 @@ namespace CtServer.Features.Sections
             {
                 var entity = new Section
                 {
-                    EventId = request.EventId,
+                    EventId = request.Model.EventId,
                     Title = request.Model.Title,
                     Location = request.Model.Location,
                     Chairs = request.Model.Chairs,

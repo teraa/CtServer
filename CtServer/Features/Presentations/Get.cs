@@ -13,8 +13,6 @@ namespace CtServer.Features.Presentations
     {
         public record Query
         (
-            int EventId,
-            int SectionId,
             int Id
         ) : IRequest<Model?>;
 
@@ -45,8 +43,6 @@ namespace CtServer.Features.Presentations
                 var model = await ctx.Presentations
                     .AsNoTracking()
                     .AsSingleQuery()
-                    .Where(x => x.Section.EventId == request.EventId)
-                    .Where(x => x.SectionId == request.SectionId)
                     .Where(x => x.Id == request.Id)
                     .Select(x => new Model
                     (

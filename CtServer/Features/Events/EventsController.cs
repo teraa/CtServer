@@ -8,14 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace CtServer.Features.Events
 {
     [ApiController]
-    [Route("events")]
+    [Route("[controller]")]
     public class EventsController : ControllerBase
     {
         private readonly IMediator _mediator;
 
         public EventsController(IMediator mediator)
             => _mediator = mediator;
-
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Index.Model>>> Index(CancellationToken cancellationToken)
@@ -24,7 +23,7 @@ namespace CtServer.Features.Events
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Create(Create.Model model, CancellationToken cancellationToken)
+        public async Task<ActionResult<Create.Result>> Create(Create.Model model, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new Create.Command(model), cancellationToken);
             return CreatedAtAction(nameof(Get), new { id = result.Id }, result);

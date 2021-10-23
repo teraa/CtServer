@@ -11,11 +11,12 @@ namespace CtServer.Features.Presentations
 {
     public static class Index
     {
-        public record Query(int EventId, int SectionId) : IRequest<Model[]>;
+        public record Query : IRequest<Model[]>;
 
         public record Model
         (
             int Id,
+            int SectionId,
             string Title,
             string[] Authors,
             string Description,
@@ -39,11 +40,10 @@ namespace CtServer.Features.Presentations
 
                 var models = await ctx.Presentations
                     .AsNoTracking()
-                    .Where(x => x.SectionId == request.SectionId)
-                    .Where(x => x.Section.EventId == request.EventId)
                     .Select(x => new Model
                     (
                         x.Id,
+                        x.SectionId,
                         x.Title,
                         x.Authors,
                         x.Description,

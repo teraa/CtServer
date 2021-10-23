@@ -14,7 +14,6 @@ namespace CtServer.Features.Sections
     {
         public record Query
         (
-            int EventId,
             int Id
         ) : IRequest<Model?>;
 
@@ -58,7 +57,6 @@ namespace CtServer.Features.Sections
                 var model = await ctx.Sections
                     .AsNoTracking()
                     .AsSingleQuery()
-                    .Where(x => x.EventId == request.EventId)
                     .Where(x => x.Id == request.Id)
                     .Select(x => new Model
                     (
