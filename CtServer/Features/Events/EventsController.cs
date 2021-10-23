@@ -26,7 +26,7 @@ namespace CtServer.Features.Events
         public async Task<ActionResult<Create.Result>> Create(Create.Model model, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new Create.Command(model), cancellationToken);
-            return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
+            return CreatedAtAction(actionName: nameof(Get), routeValues: new { id = result.Id }, value: result);
         }
 
         [HttpGet("{id}")]
