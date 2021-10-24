@@ -18,6 +18,7 @@ services:
 
   db:
     image: postgres
+    container_name: ctdb
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=example
