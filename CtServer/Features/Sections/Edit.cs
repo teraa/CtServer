@@ -16,6 +16,7 @@ namespace CtServer.Features.Sections
             int Id,
             Model Model
         ) : IRequest<bool>;
+
         public record Model
         (
             int EventId,
