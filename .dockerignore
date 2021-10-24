@@ -1,0 +1,12 @@
+# directories
+.git/
+.vscode/
+**/bin/
+**/obj/
+**/out/
+
+# files
+Dockerfile*
+**/*.md
+.editorconfig
+.gitignore
