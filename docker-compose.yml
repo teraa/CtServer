@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ctserver
+    container_name: ct-server
     ports:
       - "5000:5000"
     depends_on:
@@ -13,12 +13,12 @@ services:
     environment:
       - ASPNETCORE_URLS=http://*:5000
       - ASPNETCORE_ENVIRONMENT=Development
-    # - DB_STRING=Host=host.docker.internal;Port=5055;Database=ct;Username=postgres;Password=example;Include Error Detail=true
       - DB_STRING=Host=db;Port=5432;Database=ct;Username=postgres;Password=example;Include Error Detail=true
+    # - DB_STRING=Host=host.docker.internal;Port=5055;Database=ct;Username=postgres;Password=example;Include Error Detail=true
 
   db:
     image: postgres
-    container_name: ctdb
+    container_name: ct-db
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=example
