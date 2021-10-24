@@ -19,6 +19,7 @@ namespace CtServer.Features.Presentations
         public record Model
         (
             int Id,
+            int SectionId,
             string Title,
             string[] Authors,
             string Description,
@@ -47,6 +48,7 @@ namespace CtServer.Features.Presentations
                     .Select(x => new Model
                     (
                         x.Id,
+                        x.SectionId,
                         x.Title,
                         x.Authors,
                         x.Description,

@@ -20,6 +20,7 @@ namespace CtServer.Features.Sections
         public record Model
         (
             int Id,
+            int EventId,
             string Title,
             string Location,
             string[] Chairs,
@@ -61,6 +62,7 @@ namespace CtServer.Features.Sections
                     .Select(x => new Model
                     (
                         x.Id,
+                        x.EventId,
                         x.Title,
                         x.Location,
                         x.Chairs,
