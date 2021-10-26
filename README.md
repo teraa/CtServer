@@ -23,6 +23,11 @@ docker-compose stop
 docker-compose down
 ```
 
+### Remove unused images
+```sh
+docker image prune
+```
+
 ## API
 
 ### Documentation
