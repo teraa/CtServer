@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CtServer.Data;
 using CtServer.Data.Models;
+using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,6 +22,16 @@ namespace CtServer.Features.Events
             DateTimeOffset StartAt,
             DateTimeOffset EndAt
         );
+
+        public class ModelValidator : AbstractValidator<Model>
+        {
+            public ModelValidator()
+            {
+                RuleFor(x => x.Title).NotEmpty();
+                RuleFor(x => x.StartAt).NotEmpty();
+                RuleFor(x => x.EndAt).NotEmpty();
+            }
+        }
 
         public record Result(int Id);
 

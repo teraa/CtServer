@@ -1,4 +1,5 @@
 using CtServer.Data;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,6 +30,8 @@ namespace CtServer
             });
 
             services.AddMediatR(typeof(Startup));
+
+            services.AddFluentValidation(options => options.RegisterValidatorsFromAssemblyContaining(typeof(Startup)));
 
             services.AddControllers();
 

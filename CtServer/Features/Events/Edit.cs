@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using CtServer.Data;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +23,16 @@ namespace CtServer.Features.Events
             DateTimeOffset StartAt,
             DateTimeOffset EndAt
         );
+
+        public class ModelValidator : AbstractValidator<Model>
+        {
+            public ModelValidator()
+            {
+                RuleFor(x => x.Title).NotEmpty();
+                RuleFor(x => x.StartAt).NotEmpty();
+                RuleFor(x => x.EndAt).NotEmpty();
+            }
+        }
 
         public class Handler : IRequestHandler<Command, bool>
         {

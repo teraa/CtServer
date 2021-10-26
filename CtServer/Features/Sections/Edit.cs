@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CtServer.Data;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,6 +28,19 @@ namespace CtServer.Features.Sections
             DateTimeOffset EndAt,
             int BackgroundColor
         );
+
+        public class ModelValidator : AbstractValidator<Model>
+        {
+            public ModelValidator()
+            {
+                RuleFor(x => x.EventId).GreaterThan(0);
+                RuleFor(x => x.Title).NotEmpty();
+                RuleFor(x => x.Location).NotEmpty();
+                RuleFor(x => x.Chairs).NotEmpty().ForEach(x => x.NotEmpty());
+                RuleFor(x => x.StartAt).NotEmpty();
+                RuleFor(x => x.EndAt).NotEmpty();
+            }
+        }
 
         public class Handler : IRequestHandler<Command, bool>
         {
