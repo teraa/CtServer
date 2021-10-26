@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CtServer.Features.Presentations
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class PresentationsController : ControllerBase
     {
         private readonly IMediator _mediator;

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CtServer.Features.Sections
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class SectionsController : ControllerBase
     {
         private readonly IMediator _mediator;

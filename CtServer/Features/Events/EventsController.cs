@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CtServer.Features.Events
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class EventsController : ControllerBase
     {
         private readonly IMediator _mediator;
