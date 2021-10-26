@@ -17,9 +17,13 @@ namespace CtServer
             {
                 var ctx = scope.ServiceProvider.GetRequiredService<CtDbContext>();
                 await ctx.Database.MigrateAsync();
+
+                var env = scope.ServiceProvider.GetRequiredService<IHostEnvironment>();
+                if (env.IsDevelopment())
+                    await Seeder.SeedAsync(ctx);
             }
 
-            host.Run();
+            await host.RunAsync();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
