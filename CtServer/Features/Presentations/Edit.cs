@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,8 +23,7 @@ namespace CtServer.Features.Presentations
             string Title,
             string[] Authors,
             string Description,
-            DateTimeOffset StartAt,
-            DateTimeOffset EndAt,
+            int Position,
             string? Attachment,
             string? MainAuthorPhoto
         );
@@ -38,8 +36,7 @@ namespace CtServer.Features.Presentations
                 RuleFor(x => x.Title).NotEmpty();
                 RuleFor(x => x.Authors).NotEmpty().ForEach(x => x.NotEmpty());
                 RuleFor(x => x.Description).NotEmpty();
-                RuleFor(x => x.StartAt).NotEmpty();
-                RuleFor(x => x.EndAt).NotEmpty();
+                RuleFor(x => x.Position).GreaterThan(0);
             }
         }
 
@@ -67,8 +64,7 @@ namespace CtServer.Features.Presentations
                 entity.Title = request.Model.Title;
                 entity.Authors = request.Model.Authors;
                 entity.Description = request.Model.Description;
-                entity.StartAt = request.Model.StartAt;
-                entity.EndAt = request.Model.EndAt;
+                entity.Position = request.Model.Position;
                 entity.Attachment = request.Model.Attachment;
                 entity.MainAuthorPhoto = request.Model.MainAuthorPhoto;
 

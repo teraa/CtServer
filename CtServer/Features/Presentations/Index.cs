@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,8 +19,7 @@ namespace CtServer.Features.Presentations
             string Title,
             string[] Authors,
             string Description,
-            DateTimeOffset StartAt,
-            DateTimeOffset EndAt,
+            int Position,
             string? Attachment,
             string? MainAuthorPhoto
         );
@@ -47,8 +45,7 @@ namespace CtServer.Features.Presentations
                         x.Title,
                         x.Authors,
                         x.Description,
-                        x.StartAt,
-                        x.EndAt,
+                        x.Position,
                         x.Attachment,
                         x.MainAuthorPhoto
                     ))

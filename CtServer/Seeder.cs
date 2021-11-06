@@ -38,16 +38,14 @@ namespace CtServer
                                 Title = "Presentation AA",
                                 Authors = new[] { "Author AAA", "Author AAB" },
                                 Description = "Description",
-                                StartAt = now + TimeSpan.FromHours(1),
-                                EndAt = now + TimeSpan.FromHours(2),
+                                Position = 1,
                             },
                             new Presentation
                             {
                                 Title = "Presentation AB",
                                 Authors = new[] { "Author ABA", "Author ABB" },
                                 Description = "Description",
-                                StartAt = now + TimeSpan.FromHours(2),
-                                EndAt = now + TimeSpan.FromHours(3),
+                                Position = 2,
                             },
                         }
                     },
@@ -66,16 +64,14 @@ namespace CtServer
                                 Title = "Presentation BA",
                                 Authors = new[] { "Author BAA", "Author BAB" },
                                 Description = "Description",
-                                StartAt = now + TimeSpan.FromHours(1),
-                                EndAt = now + TimeSpan.FromHours(2),
+                                Position = 1,
                             },
                             new Presentation
                             {
                                 Title = "Presentation BB",
                                 Authors = new[] { "Author BBA", "Author BBB" },
                                 Description = "Description",
-                                StartAt = now + TimeSpan.FromHours(1),
-                                EndAt = now + TimeSpan.FromHours(2),
+                                Position = 2,
                             },
                         }
                     },

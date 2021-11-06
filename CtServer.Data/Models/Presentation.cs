@@ -1,5 +1,3 @@
-using System;
-
 #pragma warning disable CS8618
 namespace CtServer.Data.Models
 {
@@ -10,8 +8,7 @@ namespace CtServer.Data.Models
         public string Title { get; set; }
         public string[] Authors { get; set; }
         public string Description { get; set; }
-        public DateTimeOffset StartAt { get; set; }
-        public DateTimeOffset EndAt { get; set; }
+        public int Position { get; set; }
         public string? Attachment { get; set; }
         public string? MainAuthorPhoto { get; set; }
 

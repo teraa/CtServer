@@ -36,8 +36,7 @@ namespace CtServer.Features.Sections
                 string Title,
                 string[] Authors,
                 string Description,
-                DateTimeOffset StartAt,
-                DateTimeOffset EndAt,
+                int Position,
                 string? Attachment,
                 string? MainAuthorPhoto
             );
@@ -75,8 +74,7 @@ namespace CtServer.Features.Sections
                             x.Title,
                             x.Authors,
                             x.Description,
-                            x.StartAt,
-                            x.EndAt,
+                            x.Position,
                             x.Attachment,
                             x.MainAuthorPhoto
                         )).ToArray()
