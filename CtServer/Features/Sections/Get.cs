@@ -21,8 +21,8 @@ namespace CtServer.Features.Sections
         (
             int Id,
             int EventId,
+            int LocationId,
             string Title,
-            string Location,
             string[] Chairs,
             DateTimeOffset StartAt,
             DateTimeOffset EndAt,
@@ -62,8 +62,8 @@ namespace CtServer.Features.Sections
                     (
                         x.Id,
                         x.EventId,
+                        x.LocationId,
                         x.Title,
-                        x.Location,
                         x.Chairs,
                         x.StartAt,
                         x.EndAt,

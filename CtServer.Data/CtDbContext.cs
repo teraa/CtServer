@@ -12,6 +12,7 @@ namespace CtServer.Data
         public DbSet<Event> Events { get; set; }
         public DbSet<Section> Sections { get; set; }
         public DbSet<Presentation> Presentations { get; set; }
+        public DbSet<Location> Locations { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

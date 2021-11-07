@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using CtServer.Data;
@@ -7,7 +6,7 @@ using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CtServer.Features.Sections
+namespace CtServer.Features.Locations
 {
     public static class Create
     {
@@ -19,12 +18,7 @@ namespace CtServer.Features.Sections
         public record Model
         (
             int EventId,
-            int LocationId,
-            string Title,
-            string[] Chairs,
-            DateTimeOffset StartAt,
-            DateTimeOffset EndAt,
-            int BackgroundColor
+            string Name
         );
 
         public class ModelValidator : AbstractValidator<Model>
@@ -32,11 +26,7 @@ namespace CtServer.Features.Sections
             public ModelValidator()
             {
                 RuleFor(x => x.EventId).GreaterThan(0);
-                RuleFor(x => x.LocationId).GreaterThan(0);
-                RuleFor(x => x.Title).NotEmpty();
-                RuleFor(x => x.Chairs).NotEmpty().ForEach(x => x.NotEmpty());
-                RuleFor(x => x.StartAt).NotEmpty();
-                RuleFor(x => x.EndAt).NotEmpty();
+                RuleFor(x => x.Name).NotEmpty();
             }
         }
 
@@ -51,21 +41,16 @@ namespace CtServer.Features.Sections
 
             public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
             {
-                var entity = new Section
+                var entity = new Location
                 {
                     EventId = request.Model.EventId,
-                    LocationId = request.Model.LocationId,
-                    Title = request.Model.Title,
-                    Chairs = request.Model.Chairs,
-                    StartAt = request.Model.StartAt,
-                    EndAt = request.Model.EndAt,
-                    BackgroundColor = request.Model.BackgroundColor,
+                    Name = request.Model.Name,
                 };
 
                 using var scope = _scopeFactory.CreateScope();
                 var ctx = scope.ServiceProvider.GetRequiredService<CtDbContext>();
 
-                ctx.Sections.Add(entity);
+                ctx.Locations.Add(entity);
 
                 await ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 

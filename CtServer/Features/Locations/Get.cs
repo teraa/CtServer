@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,7 +6,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CtServer.Features.Events
+namespace CtServer.Features.Locations
 {
     public static class Get
     {
@@ -17,23 +15,9 @@ namespace CtServer.Features.Events
         public record Model
         (
             int Id,
-            string Title,
-            DateTimeOffset StartAt,
-            DateTimeOffset EndAt,
-            IReadOnlyList<Model.Section> Sections
-        )
-        {
-            public record Section
-            (
-                int Id,
-                int LocationId,
-                string Title,
-                string[] Chairs,
-                DateTimeOffset StartAt,
-                DateTimeOffset EndAt,
-                int BackgroundColor
-            );
-        }
+            int EventId,
+            string Name
+        );
 
         public class Handler : IRequestHandler<Query, Model?>
         {
@@ -47,26 +31,15 @@ namespace CtServer.Features.Events
                 using var scope = _scopeFactory.CreateScope();
                 var ctx = scope.ServiceProvider.GetRequiredService<CtDbContext>();
 
-                var model = await ctx.Events
+                var model = await ctx.Locations
                     .AsNoTracking()
                     .AsSingleQuery()
                     .Where(x => x.Id == request.Id)
                     .Select(x => new Model
                     (
                         x.Id,
-                        x.Title,
-                        x.StartAt,
-                        x.EndAt,
-                        x.Sections.Select(x => new Model.Section
-                        (
-                            x.Id,
-                            x.LocationId,
-                            x.Title,
-                            x.Chairs,
-                            x.StartAt,
-                            x.EndAt,
-                            x.BackgroundColor
-                        )).ToArray()
+                        x.EventId,
+                        x.Name
                     ))
                     .FirstOrDefaultAsync(cancellationToken)
                     .ConfigureAwait(false);

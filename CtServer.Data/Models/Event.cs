@@ -12,5 +12,6 @@ namespace CtServer.Data.Models
         public DateTimeOffset EndAt { get; set; }
 
         public ICollection<Section> Sections { get; set; }
+        public ICollection<Location> Locations { get; set; }
     }
 }

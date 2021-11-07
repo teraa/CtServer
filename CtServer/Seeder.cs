@@ -16,6 +16,17 @@ namespace CtServer
 
             var now = DateTimeOffset.Now;
 
+            var locA = new Location
+            {
+                Name = "Location A",
+            };
+
+            var locB = new Location
+            {
+                Name = "Location B",
+            };
+
+
             var evt = new Event
             {
                 Title = "Event A",
@@ -26,7 +37,7 @@ namespace CtServer
                     new Section
                     {
                         Title = "Section A",
-                        Location = "Location A",
+                        Location = locA,
                         Chairs = new[] { "Chair AA", "Chair AB" },
                         StartAt = now + TimeSpan.FromHours(1),
                         EndAt = now + TimeSpan.FromHours(5),
@@ -52,7 +63,7 @@ namespace CtServer
                     new Section
                     {
                         Title = "Section B",
-                        Location = "Location B",
+                        Location = locB,
                         Chairs = new[] { "Chair BA", "Chair BB" },
                         StartAt = now + TimeSpan.FromHours(1),
                         EndAt = now + TimeSpan.FromHours(5),
@@ -75,6 +86,11 @@ namespace CtServer
                             },
                         }
                     },
+                },
+                Locations = new Location[]
+                {
+                    locA,
+                    locB,
                 },
             };
 

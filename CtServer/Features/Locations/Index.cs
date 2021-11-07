@@ -7,7 +7,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CtServer.Features.Sections
+namespace CtServer.Features.Locations
 {
     public static class Index
     {
@@ -17,13 +17,7 @@ namespace CtServer.Features.Sections
         (
             int Id,
             int EventId,
-            int LocationId,
-            string Title,
-            string[] Chairs,
-            DateTimeOffset StartAt,
-            DateTimeOffset EndAt,
-            int BackgroundColor,
-            int PresentationCount
+            string Name
         );
 
         public class Handler : IRequestHandler<Query, Model[]>
@@ -38,19 +32,13 @@ namespace CtServer.Features.Sections
                 using var scope = _scopeFactory.CreateScope();
                 var ctx = scope.ServiceProvider.GetRequiredService<CtDbContext>();
 
-                var models = await ctx.Sections
+                var models = await ctx.Locations
                     .AsNoTracking()
                     .Select(x => new Model
                     (
                         x.Id,
                         x.EventId,
-                        x.LocationId,
-                        x.Title,
-                        x.Chairs,
-                        x.StartAt,
-                        x.EndAt,
-                        x.BackgroundColor,
-                        x.Presentations.Count()
+                        x.Name
                     ))
                     .ToArrayAsync(cancellationToken)
                     .ConfigureAwait(false);

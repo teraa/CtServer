@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CtServer.Data;
@@ -8,7 +6,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CtServer.Features.Sections
+namespace CtServer.Features.Locations
 {
     public static class Edit
     {
@@ -21,12 +19,7 @@ namespace CtServer.Features.Sections
         public record Model
         (
             int EventId,
-            int LocationId,
-            string Title,
-            string[] Chairs,
-            DateTimeOffset StartAt,
-            DateTimeOffset EndAt,
-            int BackgroundColor
+            string Name
         );
 
         public class ModelValidator : AbstractValidator<Model>
@@ -34,11 +27,7 @@ namespace CtServer.Features.Sections
             public ModelValidator()
             {
                 RuleFor(x => x.EventId).GreaterThan(0);
-                RuleFor(x => x.LocationId).GreaterThan(0);
-                RuleFor(x => x.Title).NotEmpty();
-                RuleFor(x => x.Chairs).NotEmpty().ForEach(x => x.NotEmpty());
-                RuleFor(x => x.StartAt).NotEmpty();
-                RuleFor(x => x.EndAt).NotEmpty();
+                RuleFor(x => x.Name).NotEmpty();
             }
         }
 
@@ -54,21 +43,15 @@ namespace CtServer.Features.Sections
                 using var scope = _scopeFactory.CreateScope();
                 var ctx = scope.ServiceProvider.GetRequiredService<CtDbContext>();
 
-                var entity = await ctx.Sections
+                var entity = await ctx.Locations
                     .AsQueryable()
-                    .Where(x => x.Id == request.Id)
-                    .FirstOrDefaultAsync(cancellationToken)
+                    .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken)
                     .ConfigureAwait(false);
 
                 if (entity is null) return false;
 
                 entity.EventId = request.Model.EventId;
-                entity.LocationId = request.Model.LocationId;
-                entity.Title = request.Model.Title;
-                entity.Chairs = request.Model.Chairs;
-                entity.StartAt = request.Model.StartAt;
-                entity.EndAt = request.Model.EndAt;
-                entity.BackgroundColor = request.Model.BackgroundColor;
+                entity.Name = request.Model.Name;
 
                 await ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
