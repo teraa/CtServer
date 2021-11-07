@@ -37,6 +37,7 @@ namespace CtServer.Features.Sections
                 string[] Authors,
                 string Description,
                 int Position,
+                int DurationMinutes,
                 string? Attachment,
                 string? MainAuthorPhoto
             );
@@ -75,6 +76,7 @@ namespace CtServer.Features.Sections
                             x.Authors,
                             x.Description,
                             x.Position,
+                            (int)x.Duration.TotalMinutes,
                             x.Attachment,
                             x.MainAuthorPhoto
                         )).ToArray()

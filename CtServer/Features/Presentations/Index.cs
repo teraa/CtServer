@@ -20,6 +20,7 @@ namespace CtServer.Features.Presentations
             string[] Authors,
             string Description,
             int Position,
+            int DurationMinutes,
             string? Attachment,
             string? MainAuthorPhoto
         );
@@ -46,6 +47,7 @@ namespace CtServer.Features.Presentations
                         x.Authors,
                         x.Description,
                         x.Position,
+                        (int)x.Duration.TotalMinutes,
                         x.Attachment,
                         x.MainAuthorPhoto
                     ))

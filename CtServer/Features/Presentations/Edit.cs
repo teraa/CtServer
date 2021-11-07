@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,6 +25,7 @@ namespace CtServer.Features.Presentations
             string[] Authors,
             string Description,
             int Position,
+            int DurationMinutes,
             string? Attachment,
             string? MainAuthorPhoto
         );
@@ -37,6 +39,7 @@ namespace CtServer.Features.Presentations
                 RuleFor(x => x.Authors).NotEmpty().ForEach(x => x.NotEmpty());
                 RuleFor(x => x.Description).NotEmpty();
                 RuleFor(x => x.Position).GreaterThan(0);
+                RuleFor(x => x.DurationMinutes).GreaterThan(0);
             }
         }
 
@@ -65,6 +68,7 @@ namespace CtServer.Features.Presentations
                 entity.Authors = request.Model.Authors;
                 entity.Description = request.Model.Description;
                 entity.Position = request.Model.Position;
+                entity.Duration = TimeSpan.FromMinutes(request.Model.DurationMinutes);
                 entity.Attachment = request.Model.Attachment;
                 entity.MainAuthorPhoto = request.Model.MainAuthorPhoto;
 

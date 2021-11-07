@@ -50,6 +50,7 @@ namespace CtServer
                                 Authors = new[] { "Author AAA", "Author AAB" },
                                 Description = "Description",
                                 Position = 1,
+                                Duration = TimeSpan.FromMinutes(30),
                             },
                             new Presentation
                             {
@@ -57,6 +58,7 @@ namespace CtServer
                                 Authors = new[] { "Author ABA", "Author ABB" },
                                 Description = "Description",
                                 Position = 2,
+                                Duration = TimeSpan.FromMinutes(45),
                             },
                         }
                     },
@@ -76,6 +78,7 @@ namespace CtServer
                                 Authors = new[] { "Author BAA", "Author BAB" },
                                 Description = "Description",
                                 Position = 1,
+                                Duration = TimeSpan.FromMinutes(15),
                             },
                             new Presentation
                             {
@@ -83,6 +86,7 @@ namespace CtServer
                                 Authors = new[] { "Author BBA", "Author BBB" },
                                 Description = "Description",
                                 Position = 2,
+                                Duration = TimeSpan.FromMinutes(60),
                             },
                         }
                     },
