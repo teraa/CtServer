@@ -18,6 +18,7 @@ namespace CtServer.Features.Events
         (
             int Id,
             string Title,
+            string Description,
             DateTimeOffset StartAt,
             DateTimeOffset EndAt,
             IReadOnlyList<Model.Section> Sections
@@ -55,6 +56,7 @@ namespace CtServer.Features.Events
                     (
                         x.Id,
                         x.Title,
+                        x.Description,
                         x.StartAt,
                         x.EndAt,
                         x.Sections.Select(x => new Model.Section

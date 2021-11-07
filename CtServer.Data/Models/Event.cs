@@ -8,6 +8,7 @@ namespace CtServer.Data.Models
     {
         public int Id { get; set; }
         public string Title { get; set; }
+        public string Description { get; set; }
         public DateTimeOffset StartAt { get; set; }
         public DateTimeOffset EndAt { get; set; }
 

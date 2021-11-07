@@ -17,6 +17,7 @@ namespace CtServer.Features.Events
         (
             int Id,
             string Title,
+            string Description,
             DateTimeOffset StartAt,
             DateTimeOffset EndAt,
             int SectionCount
@@ -40,6 +41,7 @@ namespace CtServer.Features.Events
                     (
                         x.Id,
                         x.Title,
+                        x.Description,
                         x.StartAt,
                         x.EndAt,
                         x.Sections.Count()

@@ -20,6 +20,7 @@ namespace CtServer.Features.Events
         public record Model
         (
             string Title,
+            string Description,
             DateTimeOffset StartAt,
             DateTimeOffset EndAt
         );
@@ -29,6 +30,7 @@ namespace CtServer.Features.Events
             public ModelValidator()
             {
                 RuleFor(x => x.Title).NotEmpty();
+                RuleFor(x => x.Description).NotNull();
                 RuleFor(x => x.StartAt).NotEmpty();
                 RuleFor(x => x.EndAt).NotEmpty();
             }
@@ -54,6 +56,7 @@ namespace CtServer.Features.Events
                 if (entity is null) return false;
 
                 entity.Title = request.Model.Title;
+                entity.Description = request.Model.Description;
                 entity.StartAt = request.Model.StartAt;
                 entity.EndAt = request.Model.EndAt;
 

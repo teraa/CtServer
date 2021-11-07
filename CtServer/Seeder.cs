@@ -30,6 +30,7 @@ namespace CtServer
             var evt = new Event
             {
                 Title = "Event A",
+                Description = "Event A Description",
                 StartAt = now,
                 EndAt = now + TimeSpan.FromDays(5),
                 Sections = new Section[]
