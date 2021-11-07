@@ -33,7 +33,6 @@ namespace CtServer.Features.Locations
 
                 var model = await ctx.Locations
                     .AsNoTracking()
-                    .AsSingleQuery()
                     .Where(x => x.Id == request.Id)
                     .Select(x => new Model
                     (

@@ -42,7 +42,6 @@ namespace CtServer.Features.Presentations
 
                 var model = await ctx.Presentations
                     .AsNoTracking()
-                    .AsSingleQuery()
                     .Where(x => x.Id == request.Id)
                     .Select(x => new Model
                     (
