@@ -34,6 +34,7 @@ namespace CtServer.Features.Locations
 
                 var models = await ctx.Locations
                     .AsNoTracking()
+                    .OrderBy(x => x.Id)
                     .Select(x => new Model
                     (
                         x.Id,

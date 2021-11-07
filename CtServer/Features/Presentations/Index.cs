@@ -39,6 +39,7 @@ namespace CtServer.Features.Presentations
 
                 var models = await ctx.Presentations
                     .AsNoTracking()
+                    .OrderBy(x => x.Id)
                     .Select(x => new Model
                     (
                         x.Id,

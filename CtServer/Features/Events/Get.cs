@@ -59,16 +59,19 @@ namespace CtServer.Features.Events
                         x.Description,
                         x.StartAt,
                         x.EndAt,
-                        x.Sections.Select(x => new Model.Section
-                        (
-                            x.Id,
-                            x.LocationId,
-                            x.Title,
-                            x.Chairs,
-                            x.StartAt,
-                            x.EndAt,
-                            x.BackgroundColor
-                        )).ToArray()
+                        x.Sections
+                            .OrderBy(x => x.Id)
+                            .Select(x => new Model.Section
+                            (
+                                x.Id,
+                                x.LocationId,
+                                x.Title,
+                                x.Chairs,
+                                x.StartAt,
+                                x.EndAt,
+                                x.BackgroundColor
+                            ))
+                            .ToArray()
                     ))
                     .FirstOrDefaultAsync(cancellationToken)
                     .ConfigureAwait(false);

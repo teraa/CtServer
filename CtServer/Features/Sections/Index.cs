@@ -40,6 +40,7 @@ namespace CtServer.Features.Sections
 
                 var models = await ctx.Sections
                     .AsNoTracking()
+                    .OrderBy(x => x.Id)
                     .Select(x => new Model
                     (
                         x.Id,

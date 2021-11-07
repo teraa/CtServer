@@ -69,17 +69,20 @@ namespace CtServer.Features.Sections
                         x.StartAt,
                         x.EndAt,
                         x.BackgroundColor,
-                        x.Presentations.Select(x => new Model.Presentation
-                        (
-                            x.Id,
-                            x.Title,
-                            x.Authors,
-                            x.Description,
-                            x.Position,
-                            (int)x.Duration.TotalMinutes,
-                            x.Attachment,
-                            x.MainAuthorPhoto
-                        )).ToArray()
+                        x.Presentations
+                            .OrderBy(x => x.Id)
+                            .Select(x => new Model.Presentation
+                            (
+                                x.Id,
+                                x.Title,
+                                x.Authors,
+                                x.Description,
+                                x.Position,
+                                (int)x.Duration.TotalMinutes,
+                                x.Attachment,
+                                x.MainAuthorPhoto
+                            ))
+                            .ToArray()
                     ))
                     .FirstOrDefaultAsync(cancellationToken)
                     .ConfigureAwait(false);

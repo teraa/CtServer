@@ -37,6 +37,7 @@ namespace CtServer.Features.Events
 
                 var models = await ctx.Events
                     .AsNoTracking()
+                    .OrderBy(x => x.Id)
                     .Select(x => new Model
                     (
                         x.Id,
