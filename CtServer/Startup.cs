@@ -52,6 +52,11 @@ namespace CtServer
 
             app.UseRouting();
 
+            if (env.IsDevelopment())
+            {
+                app.UseCors(policy => policy.AllowAnyOrigin());
+            }
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
