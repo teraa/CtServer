@@ -9,7 +9,7 @@ namespace CtServer.Data
         public CtDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<CtDbContext>()
-                .UseNpgsql(Environment.GetEnvironmentVariable("DB_STRING"));
+                .UseNpgsql(Environment.GetEnvironmentVariable("DB_STRING")!);
 
             return new CtDbContext(optionsBuilder.Options);
         }

@@ -13,6 +13,7 @@ services:
     environment:
       - ASPNETCORE_URLS=http://*:5000
       - ASPNETCORE_ENVIRONMENT=Development
+      - Logging__Console__FormatterName
       - DB_STRING=Host=db;Port=5432;Database=ct;Username=postgres;Password=example;Include Error Detail=true
     # - DB_STRING=Host=host.docker.internal;Port=5055;Database=ct;Username=postgres;Password=example;Include Error Detail=true
 
