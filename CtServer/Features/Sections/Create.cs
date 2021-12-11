@@ -8,6 +8,7 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CtServer.Features.Sections;
+
 public static class Create
 {
     public record Command

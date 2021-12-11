@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CtServer.Features.Events;
+
 public static class Delete
 {
     public record Command(int Id) : IRequest<bool>;

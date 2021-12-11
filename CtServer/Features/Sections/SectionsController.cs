@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CtServer.Features.Sections;
+
 [ApiController]
 [Route("api/[controller]")]
 public class SectionsController : ControllerBase

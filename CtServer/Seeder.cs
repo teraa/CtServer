@@ -6,6 +6,7 @@ using CtServer.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace CtServer;
+
 public static class Seeder
 {
     public static async Task SeedAsync(CtDbContext ctx, CancellationToken cancellationToken = default)

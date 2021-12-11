@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CtServer.Features.Events;
+
 public static class Get
 {
     public record Query(int Id) : IRequest<Model?>;

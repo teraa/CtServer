@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CtServer.Features.Events;
+
 [ApiController]
 [Route("api/[controller]")]
 public class EventsController : ControllerBase

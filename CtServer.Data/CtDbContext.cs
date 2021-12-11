@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 #pragma warning disable CS8618
 namespace CtServer.Data;
+
 public class CtDbContext : DbContext
 {
     public CtDbContext(DbContextOptions<CtDbContext> options)

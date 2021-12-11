@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CtServer.Features.Locations;
+
 public static class Get
 {
     public record Query(int Id) : IRequest<Model?>;

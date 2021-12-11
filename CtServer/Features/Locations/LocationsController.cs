@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CtServer.Features.Locations;
+
 [ApiController]
 [Route("api/[controller]")]
 public class LocationsController : ControllerBase

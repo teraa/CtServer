@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CtServer.Features.Locations;
+
 public static class Create
 {
     public record Command

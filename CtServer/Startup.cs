@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace CtServer;
+
 public class Startup
 {
     public Startup(IConfiguration configuration)

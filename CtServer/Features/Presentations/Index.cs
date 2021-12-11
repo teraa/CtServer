@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CtServer.Features.Presentations;
+
 public static class Index
 {
     public record Query : IRequest<Model[]>;
