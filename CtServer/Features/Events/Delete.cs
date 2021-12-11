@@ -6,34 +6,34 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CtServer.Features.Events;
-    public static class Delete
+public static class Delete
+{
+    public record Command(int Id) : IRequest<bool>;
+
+    public class Handler : IRequestHandler<Command, bool>
     {
-        public record Command(int Id) : IRequest<bool>;
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        public class Handler : IRequestHandler<Command, bool>
+        public Handler(IServiceScopeFactory scopeFactory)
+            => _scopeFactory = scopeFactory;
+
+        public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
         {
-            private readonly IServiceScopeFactory _scopeFactory;
+            using var scope = _scopeFactory.CreateScope();
+            var ctx = scope.ServiceProvider.GetRequiredService<CtDbContext>();
 
-            public Handler(IServiceScopeFactory scopeFactory)
-                => _scopeFactory = scopeFactory;
+            var entity = await ctx.Events
+                .AsQueryable()
+                .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken)
+                .ConfigureAwait(false);
 
-            public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
-            {
-                using var scope = _scopeFactory.CreateScope();
-                var ctx = scope.ServiceProvider.GetRequiredService<CtDbContext>();
+            if (entity is null) return false;
 
-                var entity = await ctx.Events
-                    .AsQueryable()
-                    .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken)
-                    .ConfigureAwait(false);
+            ctx.Events.Remove(entity);
 
-                if (entity is null) return false;
+            await ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-                ctx.Events.Remove(entity);
-
-                await ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-
-                return true;
-            }
+            return true;
         }
     }
+}

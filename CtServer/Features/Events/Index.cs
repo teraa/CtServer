@@ -8,48 +8,48 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CtServer.Features.Events;
-    public static class Index
+public static class Index
+{
+    public record Query : IRequest<Model[]>;
+
+    public record Model
+    (
+        int Id,
+        string Title,
+        string Description,
+        DateTimeOffset StartAt,
+        DateTimeOffset EndAt,
+        int SectionCount
+    );
+
+    public class Handler : IRequestHandler<Query, Model[]>
     {
-        public record Query : IRequest<Model[]>;
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        public record Model
-        (
-            int Id,
-            string Title,
-            string Description,
-            DateTimeOffset StartAt,
-            DateTimeOffset EndAt,
-            int SectionCount
-        );
+        public Handler(IServiceScopeFactory scopeFactory)
+            => _scopeFactory = scopeFactory;
 
-        public class Handler : IRequestHandler<Query, Model[]>
+        public async Task<Model[]> Handle(Query request, CancellationToken cancellationToken)
         {
-            private readonly IServiceScopeFactory _scopeFactory;
+            using var scope = _scopeFactory.CreateScope();
+            var ctx = scope.ServiceProvider.GetRequiredService<CtDbContext>();
 
-            public Handler(IServiceScopeFactory scopeFactory)
-                => _scopeFactory = scopeFactory;
+            var models = await ctx.Events
+                .AsNoTracking()
+                .OrderBy(x => x.Id)
+                .Select(x => new Model
+                (
+                    x.Id,
+                    x.Title,
+                    x.Description,
+                    x.StartAt,
+                    x.EndAt,
+                    x.Sections.Count()
+                ))
+                .ToArrayAsync(cancellationToken)
+                .ConfigureAwait(false);
 
-            public async Task<Model[]> Handle(Query request, CancellationToken cancellationToken)
-            {
-                using var scope = _scopeFactory.CreateScope();
-                var ctx = scope.ServiceProvider.GetRequiredService<CtDbContext>();
-
-                var models = await ctx.Events
-                    .AsNoTracking()
-                    .OrderBy(x => x.Id)
-                    .Select(x => new Model
-                    (
-                        x.Id,
-                        x.Title,
-                        x.Description,
-                        x.StartAt,
-                        x.EndAt,
-                        x.Sections.Count()
-                    ))
-                    .ToArrayAsync(cancellationToken)
-                    .ConfigureAwait(false);
-
-                return models;
-            }
+            return models;
         }
     }
+}

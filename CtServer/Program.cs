@@ -6,29 +6,29 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace CtServer;
-    public class Program
+public class Program
+{
+    public static async Task Main(string[] args)
     {
-        public static async Task Main(string[] args)
+        var host = CreateHostBuilder(args).Build();
+
+        using (var scope = host.Services.CreateScope())
         {
-            var host = CreateHostBuilder(args).Build();
+            var ctx = scope.ServiceProvider.GetRequiredService<CtDbContext>();
+            await ctx.Database.MigrateAsync();
 
-            using (var scope = host.Services.CreateScope())
-            {
-                var ctx = scope.ServiceProvider.GetRequiredService<CtDbContext>();
-                await ctx.Database.MigrateAsync();
-
-                var env = scope.ServiceProvider.GetRequiredService<IHostEnvironment>();
-                if (env.IsDevelopment())
-                    await Seeder.SeedAsync(ctx);
-            }
-
-            await host.RunAsync();
+            var env = scope.ServiceProvider.GetRequiredService<IHostEnvironment>();
+            if (env.IsDevelopment())
+                await Seeder.SeedAsync(ctx);
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+        await host.RunAsync();
     }
+
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            });
+}
