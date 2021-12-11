@@ -7,8 +7,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CtServer.Features.Events
-{
+namespace CtServer.Features.Events;
     public static class Edit
     {
         public record Command
@@ -66,4 +65,3 @@ namespace CtServer.Features.Events
             }
         }
     }
-}

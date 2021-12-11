@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 
 #pragma warning disable CS8618
-namespace CtServer.Data.Models
-{
+namespace CtServer.Data.Models;
     public class Event
     {
         public int Id { get; set; }
@@ -15,4 +14,3 @@ namespace CtServer.Data.Models
         public ICollection<Section> Sections { get; set; }
         public ICollection<Location> Locations { get; set; }
     }
-}

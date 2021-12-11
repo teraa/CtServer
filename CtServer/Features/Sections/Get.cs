@@ -8,8 +8,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CtServer.Features.Sections
-{
+namespace CtServer.Features.Sections;
     public static class Get
     {
         public record Query
@@ -91,4 +90,3 @@ namespace CtServer.Features.Sections
             }
         }
     }
-}

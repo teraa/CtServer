@@ -8,8 +8,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CtServer.Features.Events
-{
+namespace CtServer.Features.Events;
     public static class Get
     {
         public record Query(int Id) : IRequest<Model?>;
@@ -80,4 +79,3 @@ namespace CtServer.Features.Events
             }
         }
     }
-}

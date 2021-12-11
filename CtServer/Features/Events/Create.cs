@@ -7,8 +7,7 @@ using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CtServer.Features.Events
-{
+namespace CtServer.Features.Events;
     public static class Create
     {
         public record Command
@@ -65,4 +64,3 @@ namespace CtServer.Features.Events
             }
         }
     }
-}

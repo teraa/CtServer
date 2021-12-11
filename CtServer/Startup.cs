@@ -9,8 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace CtServer
-{
+namespace CtServer;
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -71,4 +70,3 @@ namespace CtServer
             });
         }
     }
-}

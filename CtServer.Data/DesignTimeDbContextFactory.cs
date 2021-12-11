@@ -2,8 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using System;
 
-namespace CtServer.Data
-{
+namespace CtServer.Data;
     internal class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<CtDbContext>
     {
         public CtDbContext CreateDbContext(string[] args)
@@ -14,4 +13,3 @@ namespace CtServer.Data
             return new CtDbContext(optionsBuilder.Options);
         }
     }
-}

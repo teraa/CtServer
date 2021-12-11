@@ -6,8 +6,7 @@ using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CtServer.Features.Locations
-{
+namespace CtServer.Features.Locations;
     public static class Create
     {
         public record Command
@@ -58,4 +57,3 @@ namespace CtServer.Features.Locations
             }
         }
     }
-}

@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 
 #pragma warning disable CS8618
-namespace CtServer.Data.Models
-{
+namespace CtServer.Data.Models;
     public class Location
     {
         public int Id { get; set; }
@@ -12,4 +11,3 @@ namespace CtServer.Data.Models
         public Event Event { get; set; }
         public ICollection<Section> Sections { get; set; }
     }
-}

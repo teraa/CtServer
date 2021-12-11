@@ -7,8 +7,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CtServer.Features.Sections
-{
+namespace CtServer.Features.Sections;
     public static class Index
     {
         public record Query : IRequest<Model[]>;
@@ -60,4 +59,3 @@ namespace CtServer.Features.Sections
             }
         }
     }
-}

@@ -5,8 +5,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CtServer.Features.Events
-{
+namespace CtServer.Features.Events;
     public static class Delete
     {
         public record Command(int Id) : IRequest<bool>;
@@ -38,4 +37,3 @@ namespace CtServer.Features.Events
             }
         }
     }
-}

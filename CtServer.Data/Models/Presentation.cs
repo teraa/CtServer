@@ -1,8 +1,7 @@
 using System;
 
 #pragma warning disable CS8618
-namespace CtServer.Data.Models
-{
+namespace CtServer.Data.Models;
     public class Presentation
     {
         public int Id { get; set; }
@@ -17,4 +16,3 @@ namespace CtServer.Data.Models
 
         public Section Section { get; set; }
     }
-}

@@ -5,8 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CtServer.Features.Events
-{
+namespace CtServer.Features.Events;
     [ApiController]
     [Route("api/[controller]")]
     public class EventsController : ControllerBase
@@ -58,4 +57,3 @@ namespace CtServer.Features.Events
             return success ? NoContent() : BadRequest();
         }
     }
-}

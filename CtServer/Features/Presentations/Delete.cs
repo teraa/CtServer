@@ -6,8 +6,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CtServer.Features.Presentations
-{
+namespace CtServer.Features.Presentations;
     public static class Delete
     {
         public record Command
@@ -43,4 +42,3 @@ namespace CtServer.Features.Presentations
             }
         }
     }
-}
