@@ -1,6 +1,8 @@
+using System.Text;
 using CtServer.Data;
 using FluentValidation.AspNetCore;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -8,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace CtServer;
 
@@ -35,7 +39,61 @@ public class Startup
 
         services.AddControllers();
 
-        services.AddOpenApiDocument();
+        services.AddSwaggerGen(x =>
+        {
+            x.CustomSchemaIds(x => x.FullName);
+            x.CustomOperationIds(x => x.RelativePath);
+            // x.CustomOperationIds(x => $"{x.ActionDescriptor.RouteValues["controller"]}_{x.HttpMethod}");
+
+            x.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Description = "JWT Authorization header using the bearer scheme",
+                In = ParameterLocation.Header,
+                // For Http "Bearer " is automatically prepended to the value provided in the Swagger UI
+                Type = SecuritySchemeType.Http,
+                Scheme = JwtBearerDefaults.AuthenticationScheme,
+            });
+            x.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = JwtBearerDefaults.AuthenticationScheme
+                        }
+                    },
+                    new string[0]
+                }
+            });
+        });
+
+
+        services.AddAuthentication(x =>
+        {
+            x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(x =>
+        {
+            x.SaveToken = true;
+            x.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["JWT_SECRET"])),
+
+                // For now
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                RequireExpirationTime = false,
+                ValidateLifetime = true,
+            };
+        });
+
+        services.AddAuthorization();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -44,13 +102,24 @@ public class Startup
         {
             app.UseDeveloperExceptionPage();
 
-            app.UseOpenApi();
+            app.UseSwagger();
+            app.UseSwaggerUI(x =>
+            {
+                x.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
+            });
 
-            app.UseSwaggerUi3();
-            app.UseReDoc(x => x.Path = "/redoc");
+            app.UseReDoc(x =>
+            {
+                x.RoutePrefix = "redoc";
+                x.ExpandResponses("200,201");
+                x.NativeScrollbars();
+            });
         }
 
         app.UseRouting();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         if (env.IsDevelopment())
         {

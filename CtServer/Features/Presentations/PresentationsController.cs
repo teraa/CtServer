@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +10,7 @@ namespace CtServer.Features.Presentations;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class PresentationsController : ControllerBase
 {
     private readonly IMediator _mediator;

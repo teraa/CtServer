@@ -13,6 +13,7 @@ public class CtDbContext : DbContext
     public DbSet<Section> Sections { get; set; }
     public DbSet<Presentation> Presentations { get; set; }
     public DbSet<Location> Locations { get; set; }
+    public DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
