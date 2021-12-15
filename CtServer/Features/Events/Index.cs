@@ -19,8 +19,7 @@ public static class Index
         string Title,
         string Description,
         DateTimeOffset StartAt,
-        DateTimeOffset EndAt,
-        int SectionCount
+        DateTimeOffset EndAt
     );
 
     public class Handler : IRequestHandler<Query, Model[]>
@@ -44,8 +43,7 @@ public static class Index
                     x.Title,
                     x.Description,
                     x.StartAt,
-                    x.EndAt,
-                    x.Sections.Count()
+                    x.EndAt
                 ))
                 .ToArrayAsync(cancellationToken)
                 .ConfigureAwait(false);

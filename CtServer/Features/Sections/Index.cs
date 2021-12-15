@@ -22,8 +22,7 @@ public static class Index
         string[] Chairs,
         DateTimeOffset StartAt,
         DateTimeOffset EndAt,
-        int BackgroundColor,
-        int PresentationCount
+        int BackgroundColor
     );
 
     public class Handler : IRequestHandler<Query, Model[]>
@@ -50,8 +49,7 @@ public static class Index
                     x.Chairs,
                     x.StartAt,
                     x.EndAt,
-                    x.BackgroundColor,
-                    x.Presentations.Count()
+                    x.BackgroundColor
                 ))
                 .ToArrayAsync(cancellationToken)
                 .ConfigureAwait(false);

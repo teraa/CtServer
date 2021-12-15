@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,21 +19,8 @@ public static class Get
         string Title,
         string Description,
         DateTimeOffset StartAt,
-        DateTimeOffset EndAt,
-        IReadOnlyList<Model.Section> Sections
-    )
-    {
-        public record Section
-        (
-            int Id,
-            int LocationId,
-            string Title,
-            string[] Chairs,
-            DateTimeOffset StartAt,
-            DateTimeOffset EndAt,
-            int BackgroundColor
-        );
-    }
+        DateTimeOffset EndAt
+    );
 
     public class Handler : IRequestHandler<Query, Model?>
     {
@@ -58,20 +44,7 @@ public static class Get
                     x.Title,
                     x.Description,
                     x.StartAt,
-                    x.EndAt,
-                    x.Sections
-                        .OrderBy(x => x.Id)
-                        .Select(x => new Model.Section
-                        (
-                            x.Id,
-                            x.LocationId,
-                            x.Title,
-                            x.Chairs,
-                            x.StartAt,
-                            x.EndAt,
-                            x.BackgroundColor
-                        ))
-                        .ToArray()
+                    x.EndAt
                 ))
                 .FirstOrDefaultAsync(cancellationToken)
                 .ConfigureAwait(false);

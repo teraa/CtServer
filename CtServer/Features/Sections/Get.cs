@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,22 +25,8 @@ public static class Get
         string[] Chairs,
         DateTimeOffset StartAt,
         DateTimeOffset EndAt,
-        int BackgroundColor,
-        IReadOnlyList<Model.Presentation> Presentations
-    )
-    {
-        public record Presentation
-        (
-            int Id,
-            string Title,
-            string[] Authors,
-            string Description,
-            int Position,
-            int DurationMinutes,
-            string? Attachment,
-            string? MainAuthorPhoto
-        );
-    }
+        int BackgroundColor
+    );
 
     public class Handler : IRequestHandler<Query, Model?>
     {
@@ -68,21 +53,7 @@ public static class Get
                     x.Chairs,
                     x.StartAt,
                     x.EndAt,
-                    x.BackgroundColor,
-                    x.Presentations
-                        .OrderBy(x => x.Id)
-                        .Select(x => new Model.Presentation
-                        (
-                            x.Id,
-                            x.Title,
-                            x.Authors,
-                            x.Description,
-                            x.Position,
-                            (int)x.Duration.TotalMinutes,
-                            x.Attachment,
-                            x.MainAuthorPhoto
-                        ))
-                        .ToArray()
+                    x.BackgroundColor
                 ))
                 .FirstOrDefaultAsync(cancellationToken)
                 .ConfigureAwait(false);
