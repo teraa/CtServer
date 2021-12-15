@@ -59,4 +59,26 @@ public class EventsController : ControllerBase
         var success = await _mediator.Send(new Delete.Command(id), cancellationToken);
         return success ? NoContent() : BadRequest();
     }
+
+    [HttpGet("{id}/Sections")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<IEnumerable<GetSections.Model>>> GetSections(int id, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new GetSections.Query(id), cancellationToken);
+        if (result is null) return NotFound();
+        return result;
+    }
+
+    [HttpGet("{id}/Locations")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<IEnumerable<GetLocations.Model>>> GetLocations(int id, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new GetLocations.Query(id), cancellationToken);
+        if (result is null) return NotFound();
+        return result;
+    }
 }

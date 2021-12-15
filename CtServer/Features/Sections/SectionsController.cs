@@ -59,4 +59,15 @@ public class SectionsController : ControllerBase
         var success = await _mediator.Send(new Delete.Command(id), cancellationToken);
         return success ? NoContent() : BadRequest();
     }
+
+    [HttpGet("{id}/Presentations")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<IEnumerable<GetPresentations.Model>>> GetPresentations(int id, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new GetPresentations.Query(id), cancellationToken);
+        if (result is null) return NotFound();
+        return result;
+    }
 }
