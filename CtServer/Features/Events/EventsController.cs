@@ -10,7 +10,7 @@ namespace CtServer.Features.Events;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+// [Authorize]
 public class EventsController : ControllerBase
 {
     private readonly IMediator _mediator;

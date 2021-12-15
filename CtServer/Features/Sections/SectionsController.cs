@@ -10,7 +10,7 @@ namespace CtServer.Features.Sections;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+// [Authorize]
 public class SectionsController : ControllerBase
 {
     private readonly IMediator _mediator;
