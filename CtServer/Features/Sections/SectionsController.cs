@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CtServer.Features.Sections;
 
 [ApiController]
+[Produces("application/json")]
 [Route("api/[controller]")]
 [Authorize]
 public class SectionsController : ControllerBase

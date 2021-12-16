@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CtServer.Features.Locations;
 
 [ApiController]
+[Produces("application/json")]
 [Route("api/[controller]")]
 [Authorize]
 public class LocationsController : ControllerBase

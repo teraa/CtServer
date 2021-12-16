@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CtServer.Features.Events;
 
 [ApiController]
+[Produces("application/json")]
 [Route("api/[controller]")]
 [Authorize]
 public class EventsController : ControllerBase
