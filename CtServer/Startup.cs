@@ -43,7 +43,8 @@ public class Startup
         services.AddSwaggerGen(x =>
         {
             x.CustomSchemaIds(x => x.FullName);
-            x.CustomOperationIds(x => x.RelativePath);
+            x.CustomOperationIds(x => $"{x.HttpMethod}_{x.RelativePath}");
+            // x.CustomOperationIds(x => $"{x.ActionDescriptor.Id}");
             // x.CustomOperationIds(x => $"{x.ActionDescriptor.RouteValues["controller"]}_{x.HttpMethod}");
 
             x.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
