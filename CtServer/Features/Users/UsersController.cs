@@ -11,7 +11,7 @@ namespace CtServer.Features.Users;
 [ApiController]
 [Produces("application/json")]
 [Route("api/[controller]")]
-[Authorize]
+// [Authorize]
 public class UsersController : ControllerBase
 {
     private readonly IMediator _mediator;
