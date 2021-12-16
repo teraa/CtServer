@@ -14,7 +14,7 @@ public static class Create
     public record Command
     (
         Model Model
-    ) : IRequest<Result>;
+    ) : IRequest<Response>;
 
     public record Model
     (
@@ -35,16 +35,16 @@ public static class Create
         }
     }
 
-    public record Result(int Id);
+    public record Response(int Id);
 
-    public class Handler : IRequestHandler<Command, Result>
+    public class Handler : IRequestHandler<Command, Response>
     {
         private readonly IServiceScopeFactory _scopeFactory;
 
         public Handler(IServiceScopeFactory scopeFactory)
             => _scopeFactory = scopeFactory;
 
-        public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
         {
             var entity = new Event
             {
@@ -61,7 +61,7 @@ public static class Create
 
             await ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-            return new Result(entity.Id);
+            return new(entity.Id);
         }
     }
 }

@@ -16,7 +16,7 @@ public static class Edit
     (
         int Id,
         Model Model
-    ) : IRequest<bool>;
+    ) : IRequest<Response?>;
 
     public record Model
     (
@@ -43,14 +43,16 @@ public static class Edit
         }
     }
 
-    public class Handler : IRequestHandler<Command, bool>
+    public record Response;
+
+    public class Handler : IRequestHandler<Command, Response?>
     {
         private readonly IServiceScopeFactory _scopeFactory;
 
         public Handler(IServiceScopeFactory scopeFactory)
             => _scopeFactory = scopeFactory;
 
-        public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Response?> Handle(Command request, CancellationToken cancellationToken)
         {
             using var scope = _scopeFactory.CreateScope();
             var ctx = scope.ServiceProvider.GetRequiredService<CtDbContext>();
@@ -61,7 +63,7 @@ public static class Edit
                 .FirstOrDefaultAsync(cancellationToken)
                 .ConfigureAwait(false);
 
-            if (entity is null) return false;
+            if (entity is null) return null;
 
             entity.SectionId = request.Model.SectionId;
             entity.Title = request.Model.Title;
@@ -74,7 +76,7 @@ public static class Edit
 
             await ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-            return true;
+            return new();
         }
     }
 }
