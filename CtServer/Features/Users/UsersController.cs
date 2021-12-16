@@ -43,4 +43,8 @@ public class UsersController : ControllerBase
             error => BadRequest(error)
         );
     }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Index.Model>>> Index(CancellationToken cancellationToken)
+        => await _mediator.Send(new Index.Query(), cancellationToken);
 }
