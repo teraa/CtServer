@@ -71,7 +71,6 @@ public class Startup
             });
         });
 
-
         services.AddAuthentication(x =>
         {
             x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -84,7 +83,7 @@ public class Startup
             x.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["JWT_SECRET"])),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration[TokenService.SecretName])),
 
                 // For now
                 ValidateIssuer = false,
@@ -96,6 +95,7 @@ public class Startup
 
         services.AddAuthorization();
 
+        services.AddSingleton<TokenService>();
         services.AddSingleton<PasswordService>();
     }
 
