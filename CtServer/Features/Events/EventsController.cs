@@ -19,10 +19,16 @@ public class EventsController : ControllerBase
     public EventsController(IMediator mediator)
         => _mediator = mediator;
 
+    /// <summary>
+    /// Get All Events
+    /// </summary>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Index.Model>>> Index(CancellationToken cancellationToken)
         => await _mediator.Send(new Index.Query(), cancellationToken);
 
+    /// <summary>
+    /// Create Event
+    /// </summary>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<ActionResult<Create.Response>> Create(Create.Model model, CancellationToken cancellationToken)
@@ -31,6 +37,9 @@ public class EventsController : ControllerBase
         return CreatedAtAction(actionName: nameof(Get), routeValues: new { id = response.Id }, value: response);
     }
 
+    /// <summary>
+    /// Get Event
+    /// </summary>
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<Get.Model>> Get(int id, CancellationToken cancellationToken)
@@ -39,6 +48,9 @@ public class EventsController : ControllerBase
         return response is null ? NotFound() : response;
     }
 
+    /// <summary>
+    /// Edit Event
+    /// </summary>
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Edit(int id, Edit.Model model, CancellationToken cancellationToken)
@@ -47,6 +59,9 @@ public class EventsController : ControllerBase
         return response is null ? NotFound() : NoContent();
     }
 
+    /// <summary>
+    /// Delete Event
+    /// </summary>
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Delete(int id, CancellationToken cancellationToken)
@@ -55,6 +70,9 @@ public class EventsController : ControllerBase
         return response is null ? NotFound() : NoContent();
     }
 
+    /// <summary>
+    /// Get Event Sections
+    /// </summary>
     [HttpGet($"{{id}}/{nameof(Sections)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<GetSections.Model>>> GetSections(int id, CancellationToken cancellationToken)
@@ -63,6 +81,9 @@ public class EventsController : ControllerBase
         return response is null ? NotFound() : response;
     }
 
+    /// <summary>
+    /// Get Event Locations
+    /// </summary>
     [HttpGet($"{{id}}/{nameof(Locations)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<GetLocations.Model>>> GetLocations(int id, CancellationToken cancellationToken)

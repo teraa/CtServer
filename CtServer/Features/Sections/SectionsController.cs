@@ -19,10 +19,16 @@ public class SectionsController : ControllerBase
     public SectionsController(IMediator mediator)
         => _mediator = mediator;
 
+    /// <summary>
+    /// Get All Sections
+    /// </summary>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Index.Model>>> Index(CancellationToken cancellationToken)
         => await _mediator.Send(new Index.Query(), cancellationToken);
 
+    /// <summary>
+    /// Create Section
+    /// </summary>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<ActionResult<Create.Response>> Create(Create.Model model, CancellationToken cancellationToken)
@@ -31,6 +37,9 @@ public class SectionsController : ControllerBase
         return CreatedAtAction(actionName: nameof(Get), routeValues: new { id = response.Id }, value: response);
     }
 
+    /// <summary>
+    /// Get Section
+    /// </summary>
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<Get.Model>> Get(int id, CancellationToken cancellationToken)
@@ -39,6 +48,9 @@ public class SectionsController : ControllerBase
         return response is null ? NotFound() : response;
     }
 
+    /// <summary>
+    /// Edit Section
+    /// </summary>
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Edit(int id, Edit.Model model, CancellationToken cancellationToken)
@@ -47,6 +59,9 @@ public class SectionsController : ControllerBase
         return response is null ? NotFound() : NoContent();
     }
 
+    /// <summary>
+    /// Delete Section
+    /// </summary>
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Delete(int id, CancellationToken cancellationToken)
@@ -55,6 +70,9 @@ public class SectionsController : ControllerBase
         return response is null ? NotFound() : NoContent();
     }
 
+    /// <summary>
+    /// Get Section Presentations
+    /// </summary>
     [HttpGet($"{{id}}/{nameof(Presentations)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<GetPresentations.Model>>> GetPresentations(int id, CancellationToken cancellationToken)

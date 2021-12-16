@@ -19,10 +19,16 @@ public class PresentationsController : ControllerBase
     public PresentationsController(IMediator mediator)
         => _mediator = mediator;
 
+    /// <summary>
+    /// Get All Presentations
+    /// </summary>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Index.Model>>> Index(CancellationToken cancellationToken)
         => await _mediator.Send(new Index.Query(), cancellationToken);
 
+    /// <summary>
+    /// Create Presentation
+    /// </summary>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<ActionResult<Create.Response>> Create(Create.Model model, CancellationToken cancellationToken)
@@ -31,6 +37,9 @@ public class PresentationsController : ControllerBase
         return CreatedAtAction(actionName: nameof(Get), routeValues: new { id = response.Id }, value: response);
     }
 
+    /// <summary>
+    /// Get Presentation
+    /// </summary>
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<Get.Model>> Get(int id, CancellationToken cancellationToken)
@@ -39,6 +48,9 @@ public class PresentationsController : ControllerBase
         return response is null ? NotFound() : response;
     }
 
+    /// <summary>
+    /// Edit Presentation
+    /// </summary>
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Edit(int id, Edit.Model model, CancellationToken cancellationToken)
@@ -47,6 +59,9 @@ public class PresentationsController : ControllerBase
         return response is null ? NotFound() : NoContent();
     }
 
+    /// <summary>
+    /// Delete Presentation
+    /// </summary>
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Delete(int id, CancellationToken cancellationToken)

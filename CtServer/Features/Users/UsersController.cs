@@ -19,6 +19,9 @@ public class UsersController : ControllerBase
     public UsersController(IMediator mediator)
         => _mediator = mediator;
 
+    /// <summary>
+    /// Register
+    /// </summary>
     [HttpPost(nameof(Register))]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Register.Fail), StatusCodes.Status400BadRequest)]
@@ -32,6 +35,9 @@ public class UsersController : ControllerBase
         );
     }
 
+    /// <summary>
+    /// Login
+    /// </summary>
     [HttpPost(nameof(Login))]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Login.Fail), StatusCodes.Status400BadRequest)]
@@ -45,6 +51,9 @@ public class UsersController : ControllerBase
         );
     }
 
+    /// <summary>
+    /// Get All Users
+    /// </summary>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Index.Model>>> Index(CancellationToken cancellationToken)
         => await _mediator.Send(new Index.Query(), cancellationToken);
