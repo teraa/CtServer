@@ -60,7 +60,7 @@ public class SectionsController : ControllerBase
         return success ? NoContent() : BadRequest();
     }
 
-    [HttpGet("{id}/Presentations")]
+    [HttpGet($"{{id}}/{nameof(Presentations)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

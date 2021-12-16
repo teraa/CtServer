@@ -60,7 +60,7 @@ public class EventsController : ControllerBase
         return success ? NoContent() : BadRequest();
     }
 
-    [HttpGet("{id}/Sections")]
+    [HttpGet($"{{id}}/{nameof(Sections)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -71,7 +71,7 @@ public class EventsController : ControllerBase
         return result;
     }
 
-    [HttpGet("{id}/Locations")]
+    [HttpGet($"{{id}}/{nameof(Locations)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
