@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using OneOf;
 
-namespace CtServer.Features.Auth;
+namespace CtServer.Features.Users;
 
 public static class Login
 {
