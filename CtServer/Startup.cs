@@ -1,5 +1,6 @@
 using System.Text;
 using CtServer.Data;
+using CtServer.Services;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -94,6 +95,8 @@ public class Startup
         });
 
         services.AddAuthorization();
+
+        services.AddSingleton<PasswordService>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

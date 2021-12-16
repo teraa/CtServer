@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CtServer.Data;
+using CtServer.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,11 +30,16 @@ public static class Login
     {
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly IMediator _mediator;
+        private readonly PasswordService _passwordService;
 
-        public Handler(IServiceScopeFactory scopeFactory, IMediator mediator)
+        public Handler(
+            IServiceScopeFactory scopeFactory,
+            IMediator mediator,
+            PasswordService passwordService)
         {
             _scopeFactory = scopeFactory;
             _mediator = mediator;
+            _passwordService = passwordService;
         }
 
         public async Task<OneOf<Success, Fail>> Handle(Command request, CancellationToken cancellationToken)
@@ -41,14 +47,14 @@ public static class Login
             using var scope = _scopeFactory.CreateScope();
             var ctx = scope.ServiceProvider.GetRequiredService<CtDbContext>();
 
-            // TODO: normalize username
-            var user = await ctx.Users.FirstOrDefaultAsync(x =>
-                x.Username == request.Model.Username &&
-                x.Password == request.Model.Password, cancellationToken)
+            string username = request.Model.Username.ToLowerInvariant();
+
+            var user = await ctx.Users
+                .FirstOrDefaultAsync(x => x.Username == username, cancellationToken)
                 .ConfigureAwait(false);
 
-            if (user is null)
-                return new Fail(new[] { "Invalid username/password." });
+            if (user is null || !_passwordService.Test(request.Model.Password, user.PasswordHash, user.PasswordSalt))
+                return new Fail(new[] { "Invalid username and/or password." });
 
             var token = await _mediator.Send(new CreateToken.Command(new CreateToken.Model(user.Username)), cancellationToken)
                 .ConfigureAwait(false);
