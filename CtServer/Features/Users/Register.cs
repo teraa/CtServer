@@ -3,13 +3,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using CtServer.Data;
 using CtServer.Data.Models;
+using CtServer.Services;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using OneOf;
 
-namespace CtServer.Features.Auth;
+namespace CtServer.Features.Users;
 
 public static class Register
 {
@@ -40,11 +41,19 @@ public static class Register
     {
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly IMediator _mediator;
+        private readonly PasswordService _passwordService;
+        private readonly TokenService _tokenService;
 
-        public Handler(IServiceScopeFactory scopeFactory, IMediator mediator)
+        public Handler(
+            IServiceScopeFactory scopeFactory,
+            IMediator mediator,
+            PasswordService passwordService,
+            TokenService tokenService)
         {
             _scopeFactory = scopeFactory;
             _mediator = mediator;
+            _passwordService = passwordService;
+            _tokenService = tokenService;
         }
 
         public async Task<OneOf<Success, Fail>> Handle(Command request, CancellationToken cancellationToken)
@@ -52,24 +61,28 @@ public static class Register
             using var scope = _scopeFactory.CreateScope();
             var ctx = scope.ServiceProvider.GetRequiredService<CtDbContext>();
 
-            // TODO: normalize username
-            bool exists = await ctx.Users.AnyAsync(x => x.Username == request.Model.Username, cancellationToken)
+            string username = request.Model.Username.ToLowerInvariant();
+
+            bool exists = await ctx.Users
+                .AnyAsync(x => x.Username == username, cancellationToken)
                 .ConfigureAwait(false);
 
             if (exists)
                 return new Fail(new[] { "User already exists." });
 
+            var password = _passwordService.Hash(request.Model.Password);
+
             var user = new User
             {
-                Username = request.Model.Username,
-                Password = request.Model.Password,
+                Username = username,
+                PasswordHash = password.hash,
+                PasswordSalt = password.salt,
             };
 
             ctx.Add(user);
             await ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-            var token = await _mediator.Send(new CreateToken.Command(new CreateToken.Model(user.Username)), cancellationToken)
-                .ConfigureAwait(false);
+            var token = _tokenService.CreateToken(user.Id);
 
             return new Success(token);
         }

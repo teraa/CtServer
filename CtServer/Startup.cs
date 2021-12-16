@@ -1,5 +1,7 @@
+using System.IO;
 using System.Text;
 using CtServer.Data;
+using CtServer.Services;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -41,8 +43,10 @@ public class Startup
 
         services.AddSwaggerGen(x =>
         {
+            x.IncludeXmlComments(Path.Combine(System.AppContext.BaseDirectory, $"{nameof(CtServer)}.xml"));
             x.CustomSchemaIds(x => x.FullName);
-            x.CustomOperationIds(x => x.RelativePath);
+            // x.CustomOperationIds(x => $"{x.HttpMethod} {x.RelativePath}");
+            // x.CustomOperationIds(x => $"{x.ActionDescriptor.Id}");
             // x.CustomOperationIds(x => $"{x.ActionDescriptor.RouteValues["controller"]}_{x.HttpMethod}");
 
             x.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
@@ -70,7 +74,6 @@ public class Startup
             });
         });
 
-
         services.AddAuthentication(x =>
         {
             x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -83,7 +86,7 @@ public class Startup
             x.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["JWT_SECRET"])),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration[TokenService.SecretName])),
 
                 // For now
                 ValidateIssuer = false,
@@ -94,6 +97,9 @@ public class Startup
         });
 
         services.AddAuthorization();
+
+        services.AddSingleton<TokenService>();
+        services.AddSingleton<PasswordService>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
