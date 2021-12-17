@@ -124,9 +124,6 @@ public class Startup
 
         app.UseRouting();
 
-        app.UseAuthentication();
-        app.UseAuthorization();
-
         if (env.IsDevelopment())
         {
             app.UseCors(policy =>
@@ -135,6 +132,9 @@ public class Startup
                 policy.AllowAnyHeader();
             });
         }
+
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         app.UseEndpoints(endpoints =>
         {
