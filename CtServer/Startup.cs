@@ -129,7 +129,11 @@ public class Startup
 
         if (env.IsDevelopment())
         {
-            app.UseCors(policy => policy.AllowAnyOrigin());
+            app.UseCors(policy =>
+            {
+                policy.AllowAnyOrigin();
+                policy.AllowAnyHeader();
+            });
         }
 
         app.UseEndpoints(endpoints =>
