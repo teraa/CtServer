@@ -1,11 +1,4 @@
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using CtServer.Data;
 using CtServer.Services;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using OneOf;
 
 namespace CtServer.Features.Users;

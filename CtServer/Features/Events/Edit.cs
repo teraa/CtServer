@@ -1,12 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using CtServer.Data;
-using FluentValidation;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-
 namespace CtServer.Features.Events;
 
 public static class Edit

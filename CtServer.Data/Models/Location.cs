@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 #pragma warning disable CS8618
 namespace CtServer.Data.Models;
 
