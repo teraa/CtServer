@@ -73,7 +73,7 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Create User Session (Login)
     /// </summary>
-    [HttpPost("Session")]
+    [HttpPost("Sessions")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CreateSession.Fail), StatusCodes.Status400BadRequest)]
     [AllowAnonymous]
