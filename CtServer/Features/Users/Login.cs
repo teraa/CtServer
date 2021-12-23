@@ -21,18 +21,18 @@ public static class Login
 
     public class Handler : IRequestHandler<Command, OneOf<Success, Fail>>
     {
-        private readonly IServiceScopeFactory _scopeFactory;
+        private readonly CtDbContext _ctx;
         private readonly IMediator _mediator;
         private readonly PasswordService _passwordService;
         private readonly TokenService _tokenService;
 
         public Handler(
-            IServiceScopeFactory scopeFactory,
+            CtDbContext ctx,
             IMediator mediator,
             PasswordService passwordService,
             TokenService tokenService)
         {
-            _scopeFactory = scopeFactory;
+            _ctx = ctx;
             _mediator = mediator;
             _passwordService = passwordService;
             _tokenService = tokenService;
@@ -40,12 +40,9 @@ public static class Login
 
         public async Task<OneOf<Success, Fail>> Handle(Command request, CancellationToken cancellationToken)
         {
-            using var scope = _scopeFactory.CreateScope();
-            var ctx = scope.ServiceProvider.GetRequiredService<CtDbContext>();
-
             string username = request.Model.Username.ToLowerInvariant();
 
-            var user = await ctx.Users
+            var user = await _ctx.Users
                 .FirstOrDefaultAsync(x => x.Username == username, cancellationToken)
                 .ConfigureAwait(false);
 

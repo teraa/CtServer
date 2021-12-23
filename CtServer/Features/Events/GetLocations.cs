@@ -12,17 +12,14 @@ public static class GetLocations
 
     public class Handler : IRequestHandler<Query, Model[]?>
     {
-        private readonly IServiceScopeFactory _scopeFactory;
+        private readonly CtDbContext _ctx;
 
-        public Handler(IServiceScopeFactory scopeFactory)
-            => _scopeFactory = scopeFactory;
+        public Handler(CtDbContext ctx)
+            => _ctx = ctx;
 
         public async Task<Model[]?> Handle(Query request, CancellationToken cancellationToken)
         {
-            using var scope = _scopeFactory.CreateScope();
-            var ctx = scope.ServiceProvider.GetRequiredService<CtDbContext>();
-
-            var models = await ctx.Locations
+            var models = await _ctx.Locations
                 .AsNoTracking()
                 .Where(x => x.EventId == request.EventId)
                 .OrderBy(x => x.Id)
@@ -36,7 +33,7 @@ public static class GetLocations
 
             if (!models.Any())
             {
-                var exists = await ctx.Events
+                var exists = await _ctx.Events
                     .AnyAsync(x => x.Id == request.EventId, cancellationToken)
                     .ConfigureAwait(false);
 

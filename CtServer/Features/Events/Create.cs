@@ -32,10 +32,10 @@ public static class Create
 
     public class Handler : IRequestHandler<Command, Response>
     {
-        private readonly IServiceScopeFactory _scopeFactory;
+        private readonly CtDbContext _ctx;
 
-        public Handler(IServiceScopeFactory scopeFactory)
-            => _scopeFactory = scopeFactory;
+        public Handler(CtDbContext ctx)
+            => _ctx = ctx;
 
         public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
         {
@@ -47,12 +47,9 @@ public static class Create
                 EndAt = request.Model.EndAt,
             };
 
-            using var scope = _scopeFactory.CreateScope();
-            var ctx = scope.ServiceProvider.GetRequiredService<CtDbContext>();
+            _ctx.Events.Add(entity);
 
-            ctx.Events.Add(entity);
-
-            await ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             return new(entity.Id);
         }

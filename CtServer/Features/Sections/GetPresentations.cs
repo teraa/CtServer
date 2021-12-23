@@ -18,17 +18,14 @@ public static class GetPresentations
 
     public class Handler : IRequestHandler<Query, Model[]?>
     {
-        private readonly IServiceScopeFactory _scopeFactory;
+        private readonly CtDbContext _ctx;
 
-        public Handler(IServiceScopeFactory scopeFactory)
-            => _scopeFactory = scopeFactory;
+        public Handler(CtDbContext ctx)
+            => _ctx = ctx;
 
         public async Task<Model[]?> Handle(Query request, CancellationToken cancellationToken)
         {
-            using var scope = _scopeFactory.CreateScope();
-            var ctx = scope.ServiceProvider.GetRequiredService<CtDbContext>();
-
-            var models = await ctx.Presentations
+            var models = await _ctx.Presentations
                 .AsNoTracking()
                 .OrderBy(x => x.Id)
                 .Select(x => new Model
@@ -48,7 +45,7 @@ public static class GetPresentations
 
             if (!models.Any())
             {
-                var exists = await ctx.Sections
+                var exists = await _ctx.Sections
                     .AnyAsync(x => x.Id == request.SectionId, cancellationToken)
                     .ConfigureAwait(false);
 

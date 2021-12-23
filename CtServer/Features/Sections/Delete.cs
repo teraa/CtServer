@@ -11,17 +11,14 @@ public static class Delete
 
     public class Handler : IRequestHandler<Command, Response?>
     {
-        private readonly IServiceScopeFactory _scopeFactory;
+        private readonly CtDbContext _ctx;
 
-        public Handler(IServiceScopeFactory scopeFactory)
-            => _scopeFactory = scopeFactory;
+        public Handler(CtDbContext ctx)
+            => _ctx = ctx;
 
         public async Task<Response?> Handle(Command request, CancellationToken cancellationToken)
         {
-            using var scope = _scopeFactory.CreateScope();
-            var ctx = scope.ServiceProvider.GetRequiredService<CtDbContext>();
-
-            var entity = await ctx.Sections
+            var entity = await _ctx.Sections
                 .AsQueryable()
                 .Where(x => x.Id == request.Id)
                 .FirstOrDefaultAsync(cancellationToken)
@@ -29,9 +26,9 @@ public static class Delete
 
             if (entity is null) return null;
 
-            ctx.Sections.Remove(entity);
+            _ctx.Sections.Remove(entity);
 
-            await ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             return new();
         }
