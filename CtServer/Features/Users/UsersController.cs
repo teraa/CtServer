@@ -85,4 +85,40 @@ public class UsersController : ControllerBase
             error => BadRequest(error)
         );
     }
+
+    /// <summary>
+    /// Get User Events
+    /// </summary>
+    [HttpGet($"{{id}}/{nameof(Events)}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<GetEvents.Model>>> GetEvents(int id, CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(new GetEvents.Query(id), cancellationToken);
+        return response is null ? NotFound() : response;
+    }
+
+    /// <summary>
+    /// Add User Event
+    /// </summary>
+    [HttpPost($"{{id}}/{nameof(Events)}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<ActionResult> AddEvent(int id, AddEvent.Model model, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new AddEvent.Command(id, model), cancellationToken);
+        return result.Match<ActionResult>(
+            success => NoContent(),
+            notFound => NotFound(),
+            error => BadRequest(error)
+        );
+    }
+    /// <summary>
+    /// Remove User Event
+    /// </summary>
+    [HttpDelete($"{{id}}/{nameof(Events)}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<ActionResult> Remove(int id, RemoveEvent.Model model, CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(new RemoveEvent.Command(id, model), cancellationToken);
+        return response is null ? NotFound() : NoContent();
+    }
 }

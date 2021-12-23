@@ -86,4 +86,15 @@ public class EventsController : ControllerBase
         var response = await _mediator.Send(new GetLocations.Query(id), cancellationToken);
         return response is null ? NotFound() : response;
     }
+
+    /// <summary>
+    /// Get Event Users
+    /// </summary>
+    [HttpGet($"{{id}}/{nameof(Users)}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<GetUsers.Model>>> GetUsers(int id, CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(new GetUsers.Query(id), cancellationToken);
+        return response is null ? NotFound() : response;
+    }
 }
