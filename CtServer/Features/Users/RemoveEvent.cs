@@ -1,11 +1,16 @@
-namespace CtServer.Features.Sections;
+using OneOf;
 
-public static class Delete
+namespace CtServer.Features.Users;
+
+public static class RemoveEvent
 {
     public record Command
     (
-        int Id
+        int UserId,
+        Model Model
     ) : IRequest<Response?>;
+
+    public record Model(int Id);
 
     public record Response;
 
@@ -18,15 +23,13 @@ public static class Delete
 
         public async Task<Response?> Handle(Command request, CancellationToken cancellationToken)
         {
-            var entity = await _ctx.Sections
-                .AsQueryable()
-                .Where(x => x.Id == request.Id)
-                .FirstOrDefaultAsync(cancellationToken)
+            var entity = await _ctx.UserEvents
+                .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.EventId == request.Model.Id, cancellationToken)
                 .ConfigureAwait(false);
 
             if (entity is null) return null;
 
-            _ctx.Sections.Remove(entity);
+            _ctx.UserEvents.Remove(entity);
 
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 

@@ -1,13 +1,3 @@
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using CtServer.Data;
-using FluentValidation;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-
 namespace CtServer.Features.Presentations;
 
 public static class Edit
@@ -47,17 +37,14 @@ public static class Edit
 
     public class Handler : IRequestHandler<Command, Response?>
     {
-        private readonly IServiceScopeFactory _scopeFactory;
+        private readonly CtDbContext _ctx;
 
-        public Handler(IServiceScopeFactory scopeFactory)
-            => _scopeFactory = scopeFactory;
+        public Handler(CtDbContext ctx)
+            => _ctx = ctx;
 
         public async Task<Response?> Handle(Command request, CancellationToken cancellationToken)
         {
-            using var scope = _scopeFactory.CreateScope();
-            var ctx = scope.ServiceProvider.GetRequiredService<CtDbContext>();
-
-            var entity = await ctx.Presentations
+            var entity = await _ctx.Presentations
                 .AsQueryable()
                 .Where(x => x.Id == request.Id)
                 .FirstOrDefaultAsync(cancellationToken)
@@ -74,7 +61,7 @@ public static class Edit
             entity.Attachment = request.Model.Attachment;
             entity.MainAuthorPhoto = request.Model.MainAuthorPhoto;
 
-            await ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             return new();
         }

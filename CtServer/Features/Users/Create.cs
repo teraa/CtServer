@@ -1,18 +1,10 @@
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using CtServer.Data;
 using CtServer.Data.Models;
 using CtServer.Services;
-using FluentValidation;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using OneOf;
 
 namespace CtServer.Features.Users;
 
-public static class Register
+public static class Create
 {
     public record Command
     (
@@ -34,23 +26,28 @@ public static class Register
         }
     }
 
-    public record Success(string Token);
+    public record Success
+    (
+        int Id,
+        string Token
+    );
+
     public record Fail(IEnumerable<string> Errors);
 
     public class Handler : IRequestHandler<Command, OneOf<Success, Fail>>
     {
-        private readonly IServiceScopeFactory _scopeFactory;
+        private readonly CtDbContext _ctx;
         private readonly IMediator _mediator;
         private readonly PasswordService _passwordService;
         private readonly TokenService _tokenService;
 
         public Handler(
-            IServiceScopeFactory scopeFactory,
+            CtDbContext ctx,
             IMediator mediator,
             PasswordService passwordService,
             TokenService tokenService)
         {
-            _scopeFactory = scopeFactory;
+            _ctx = ctx;
             _mediator = mediator;
             _passwordService = passwordService;
             _tokenService = tokenService;
@@ -58,12 +55,9 @@ public static class Register
 
         public async Task<OneOf<Success, Fail>> Handle(Command request, CancellationToken cancellationToken)
         {
-            using var scope = _scopeFactory.CreateScope();
-            var ctx = scope.ServiceProvider.GetRequiredService<CtDbContext>();
-
             string username = request.Model.Username.ToLowerInvariant();
 
-            bool exists = await ctx.Users
+            bool exists = await _ctx.Users
                 .AnyAsync(x => x.Username == username, cancellationToken)
                 .ConfigureAwait(false);
 
@@ -79,12 +73,12 @@ public static class Register
                 PasswordSalt = password.salt,
             };
 
-            ctx.Add(user);
-            await ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            _ctx.Add(user);
+            await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             var token = _tokenService.CreateToken(user.Id);
 
-            return new Success(token);
+            return new Success(user.Id, token);
         }
     }
 }

@@ -1,12 +1,3 @@
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using CtServer.Data;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-
 namespace CtServer.Features.Events;
 
 public static class GetSections
@@ -26,17 +17,14 @@ public static class GetSections
 
     public class Handler : IRequestHandler<Query, Model[]?>
     {
-        private readonly IServiceScopeFactory _scopeFactory;
+        private readonly CtDbContext _ctx;
 
-        public Handler(IServiceScopeFactory scopeFactory)
-            => _scopeFactory = scopeFactory;
+        public Handler(CtDbContext ctx)
+            => _ctx = ctx;
 
         public async Task<Model[]?> Handle(Query request, CancellationToken cancellationToken)
         {
-            using var scope = _scopeFactory.CreateScope();
-            var ctx = scope.ServiceProvider.GetRequiredService<CtDbContext>();
-
-            var models = await ctx.Sections
+            var models = await _ctx.Sections
                 .AsNoTracking()
                 .Where(x => x.EventId == request.EventId)
                 .OrderBy(x => x.Id)
@@ -55,7 +43,7 @@ public static class GetSections
 
             if (!models.Any())
             {
-                var exists = await ctx.Events
+                var exists = await _ctx.Events
                     .AnyAsync(x => x.Id == request.EventId, cancellationToken)
                     .ConfigureAwait(false);
 

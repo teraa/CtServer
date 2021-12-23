@@ -1,4 +1,4 @@
-namespace CtServer.Features.Events;
+namespace CtServer.Features.Users;
 
 public static class Edit
 {
@@ -8,22 +8,13 @@ public static class Edit
         Model Model
     ) : IRequest<Response?>;
 
-    public record Model
-    (
-        string Title,
-        string Description,
-        DateTimeOffset StartAt,
-        DateTimeOffset EndAt
-    );
+    public record Model(string Username);
 
     public class ModelValidator : AbstractValidator<Model>
     {
         public ModelValidator()
         {
-            RuleFor(x => x.Title).NotEmpty();
-            RuleFor(x => x.Description).NotNull();
-            RuleFor(x => x.StartAt).NotEmpty();
-            RuleFor(x => x.EndAt).NotEmpty();
+            RuleFor(x => x.Username).MinimumLength(3);
         }
     }
 
@@ -38,17 +29,14 @@ public static class Edit
 
         public async Task<Response?> Handle(Command request, CancellationToken cancellationToken)
         {
-            var entity = await _ctx.Events
+            var entity = await _ctx.Users
                 .AsQueryable()
                 .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken)
                 .ConfigureAwait(false);
 
             if (entity is null) return null;
 
-            entity.Title = request.Model.Title;
-            entity.Description = request.Model.Description;
-            entity.StartAt = request.Model.StartAt;
-            entity.EndAt = request.Model.EndAt;
+            entity.Username = request.Model.Username;
 
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 

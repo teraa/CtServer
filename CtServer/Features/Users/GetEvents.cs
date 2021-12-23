@@ -1,19 +1,16 @@
-namespace CtServer.Features.Sections;
+namespace CtServer.Features.Users;
 
-public static class GetPresentations
+public static class GetEvents
 {
-    public record Query(int SectionId) : IRequest<Model[]?>;
+    public record Query(int UserId) : IRequest<Model[]?>;
 
     public record Model
     (
         int Id,
         string Title,
-        string[] Authors,
         string Description,
-        int Position,
-        int DurationMinutes,
-        string? Attachment,
-        string? MainAuthorPhoto
+        DateTimeOffset StartAt,
+        DateTimeOffset EndAt
     );
 
     public class Handler : IRequestHandler<Query, Model[]?>
@@ -25,28 +22,26 @@ public static class GetPresentations
 
         public async Task<Model[]?> Handle(Query request, CancellationToken cancellationToken)
         {
-            var models = await _ctx.Presentations
+            var models = await _ctx.Users
                 .AsNoTracking()
+                .Where(x => x.Id == request.UserId)
+                .SelectMany(x => x.Events)
                 .OrderBy(x => x.Id)
                 .Select(x => new Model
                 (
                     x.Id,
                     x.Title,
-                    x.Authors,
                     x.Description,
-                    x.Position,
-                    (int)x.Duration.TotalMinutes,
-                    x.Attachment,
-                    x.MainAuthorPhoto
+                    x.StartAt,
+                    x.EndAt
                 ))
                 .ToArrayAsync(cancellationToken)
                 .ConfigureAwait(false);
 
-
             if (!models.Any())
             {
-                var exists = await _ctx.Sections
-                    .AnyAsync(x => x.Id == request.SectionId, cancellationToken)
+                var exists = await _ctx.Users
+                    .AnyAsync(x => x.Id == request.UserId, cancellationToken)
                     .ConfigureAwait(false);
 
                 if (!exists)

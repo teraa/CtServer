@@ -1,10 +1,3 @@
-using System.Threading.Tasks;
-using CtServer.Data;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-
 namespace CtServer;
 
 public class Program

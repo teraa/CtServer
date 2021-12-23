@@ -1,11 +1,8 @@
-namespace CtServer.Features.Sections;
+namespace CtServer.Features.Users;
 
 public static class Delete
 {
-    public record Command
-    (
-        int Id
-    ) : IRequest<Response?>;
+    public record Command(int Id) : IRequest<Response?>;
 
     public record Response;
 
@@ -18,15 +15,14 @@ public static class Delete
 
         public async Task<Response?> Handle(Command request, CancellationToken cancellationToken)
         {
-            var entity = await _ctx.Sections
+            var entity = await _ctx.Users
                 .AsQueryable()
-                .Where(x => x.Id == request.Id)
-                .FirstOrDefaultAsync(cancellationToken)
+                .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken)
                 .ConfigureAwait(false);
 
             if (entity is null) return null;
 
-            _ctx.Sections.Remove(entity);
+            _ctx.Users.Remove(entity);
 
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 

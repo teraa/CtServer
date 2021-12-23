@@ -1,9 +1,4 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using CtServer.Data;
 using CtServer.Data.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace CtServer;
 

@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 #pragma warning disable CS8618
 namespace CtServer.Data.Models;
 
@@ -14,4 +11,6 @@ public class Event
 
     public ICollection<Section> Sections { get; set; }
     public ICollection<Location> Locations { get; set; }
+    public ICollection<UserEvent> UserEvents { get; set; }
+    public ICollection<User> Users { get; set; }
 }

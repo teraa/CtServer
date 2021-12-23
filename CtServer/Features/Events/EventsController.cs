@@ -1,9 +1,4 @@
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CtServer.Features.Events;
@@ -89,6 +84,17 @@ public class EventsController : ControllerBase
     public async Task<ActionResult<IEnumerable<GetLocations.Model>>> GetLocations(int id, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetLocations.Query(id), cancellationToken);
+        return response is null ? NotFound() : response;
+    }
+
+    /// <summary>
+    /// Get Event Users
+    /// </summary>
+    [HttpGet($"{{id}}/{nameof(Users)}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<GetUsers.Model>>> GetUsers(int id, CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(new GetUsers.Query(id), cancellationToken);
         return response is null ? NotFound() : response;
     }
 }

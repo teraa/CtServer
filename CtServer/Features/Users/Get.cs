@@ -1,4 +1,4 @@
-namespace CtServer.Features.Locations;
+namespace CtServer.Features.Users;
 
 public static class Get
 {
@@ -7,8 +7,7 @@ public static class Get
     public record Model
     (
         int Id,
-        int EventId,
-        string Name
+        string Username
     );
 
     public class Handler : IRequestHandler<Query, Model?>
@@ -20,14 +19,14 @@ public static class Get
 
         public async Task<Model?> Handle(Query request, CancellationToken cancellationToken)
         {
-            var model = await _ctx.Locations
+            var model = await _ctx.Users
                 .AsNoTracking()
+                .AsSingleQuery()
                 .Where(x => x.Id == request.Id)
                 .Select(x => new Model
                 (
                     x.Id,
-                    x.EventId,
-                    x.Name
+                    x.Username
                 ))
                 .FirstOrDefaultAsync(cancellationToken)
                 .ConfigureAwait(false);
