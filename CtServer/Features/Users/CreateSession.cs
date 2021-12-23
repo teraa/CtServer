@@ -43,6 +43,7 @@ public static class CreateSession
             string username = request.Model.Username.ToLowerInvariant();
 
             var user = await _ctx.Users
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Username == username, cancellationToken)
                 .ConfigureAwait(false);
 
