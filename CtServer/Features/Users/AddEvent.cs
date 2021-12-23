@@ -57,7 +57,7 @@ public static class AddEvent
 
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-            return new();
+            return new Success();
         }
     }
 }

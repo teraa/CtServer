@@ -1,5 +1,3 @@
-using OneOf;
-
 namespace CtServer.Features.Users;
 
 public static class RemoveEvent
