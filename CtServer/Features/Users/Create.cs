@@ -26,7 +26,12 @@ public static class Create
         }
     }
 
-    public record Success(string Token);
+    public record Success
+    (
+        int Id,
+        string Token
+    );
+
     public record Fail(IEnumerable<string> Errors);
 
     public class Handler : IRequestHandler<Command, OneOf<Success, Fail>>
@@ -73,7 +78,7 @@ public static class Create
 
             var token = _tokenService.CreateToken(user.Id);
 
-            return new Success(token);
+            return new Success(user.Id, token);
         }
     }
 }

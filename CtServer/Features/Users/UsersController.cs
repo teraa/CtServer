@@ -25,14 +25,14 @@ public class UsersController : ControllerBase
     /// Create User (Register)
     /// </summary>
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(Create.Fail), StatusCodes.Status400BadRequest)]
     [AllowAnonymous]
     public async Task<ActionResult<Create.Success>> Create([FromBody] Create.Model model, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new Create.Command(model), cancellationToken);
         return result.Match<ActionResult>(
-            success => Ok(success),
+            success => CreatedAtAction(actionName: nameof(Get), routeValues: new { id = success.Id }, value: success),
             error => BadRequest(error)
         );
     }
