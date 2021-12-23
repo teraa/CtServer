@@ -14,6 +14,7 @@ public class CtDbContext : DbContext
     public DbSet<Presentation> Presentations { get; set; }
     public DbSet<Location> Locations { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<UserEvent> UserEvents { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
