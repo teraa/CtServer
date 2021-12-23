@@ -116,7 +116,7 @@ public class UsersController : ControllerBase
     /// </summary>
     [HttpDelete($"{{id}}/{nameof(Events)}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<ActionResult> Remove(int id, RemoveEvent.Model model, CancellationToken cancellationToken)
+    public async Task<ActionResult> RemoveEvent(int id, RemoveEvent.Model model, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new RemoveEvent.Command(id, model), cancellationToken);
         return response is null ? NotFound() : NoContent();
