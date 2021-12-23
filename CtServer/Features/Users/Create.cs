@@ -1,9 +1,10 @@
+using CtServer.Data.Models;
 using CtServer.Services;
 using OneOf;
 
 namespace CtServer.Features.Users;
 
-public static class Login
+public static class Create
 {
     public record Command
     (
@@ -15,6 +16,15 @@ public static class Login
         string Username,
         string Password
     );
+
+    public class ModelValidator : AbstractValidator<Model>
+    {
+        public ModelValidator()
+        {
+            RuleFor(x => x.Username).MinimumLength(3);
+            RuleFor(x => x.Password).MinimumLength(6);
+        }
+    }
 
     public record Success(string Token);
     public record Fail(IEnumerable<string> Errors);
@@ -42,12 +52,24 @@ public static class Login
         {
             string username = request.Model.Username.ToLowerInvariant();
 
-            var user = await _ctx.Users
-                .FirstOrDefaultAsync(x => x.Username == username, cancellationToken)
+            bool exists = await _ctx.Users
+                .AnyAsync(x => x.Username == username, cancellationToken)
                 .ConfigureAwait(false);
 
-            if (user is null || !_passwordService.Test(request.Model.Password, user.PasswordHash, user.PasswordSalt))
-                return new Fail(new[] { "Invalid username and/or password." });
+            if (exists)
+                return new Fail(new[] { "User already exists." });
+
+            var password = _passwordService.Hash(request.Model.Password);
+
+            var user = new User
+            {
+                Username = username,
+                PasswordHash = password.hash,
+                PasswordSalt = password.salt,
+            };
+
+            _ctx.Add(user);
+            await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             var token = _tokenService.CreateToken(user.Id);
 

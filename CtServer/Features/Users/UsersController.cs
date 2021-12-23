@@ -15,41 +15,74 @@ public class UsersController : ControllerBase
         => _mediator = mediator;
 
     /// <summary>
-    /// Register
-    /// </summary>
-    [HttpPost(nameof(Register))]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(Register.Fail), StatusCodes.Status400BadRequest)]
-    [AllowAnonymous]
-    public async Task<ActionResult<Register.Success>> Register([FromBody] Register.Model model, CancellationToken cancellationToken)
-    {
-        var result = await _mediator.Send(new Register.Command(model), cancellationToken);
-        return result.Match<ActionResult>(
-            success => Ok(success),
-            error => BadRequest(error)
-        );
-    }
-
-    /// <summary>
-    /// Login
-    /// </summary>
-    [HttpPost(nameof(Login))]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(Login.Fail), StatusCodes.Status400BadRequest)]
-    [AllowAnonymous]
-    public async Task<ActionResult<Login.Success>> Login([FromBody] Login.Model model, CancellationToken cancellationToken)
-    {
-        var result = await _mediator.Send(new Login.Command(model), cancellationToken);
-        return result.Match<ActionResult>(
-            success => Ok(success),
-            error => BadRequest(error)
-        );
-    }
-
-    /// <summary>
     /// Get All Users
     /// </summary>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Index.Model>>> Index(CancellationToken cancellationToken)
         => await _mediator.Send(new Index.Query(), cancellationToken);
+
+    /// <summary>
+    /// Create User (Register)
+    /// </summary>
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Create.Fail), StatusCodes.Status400BadRequest)]
+    [AllowAnonymous]
+    public async Task<ActionResult<Create.Success>> Create([FromBody] Create.Model model, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new Create.Command(model), cancellationToken);
+        return result.Match<ActionResult>(
+            success => Ok(success),
+            error => BadRequest(error)
+        );
+    }
+
+    /// <summary>
+    /// Get User
+    /// </summary>
+    [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<Get.Model>> Get(int id, CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(new Get.Query(id), cancellationToken);
+        return response is null ? NotFound() : response;
+    }
+
+    /// <summary>
+    /// Edit User
+    /// </summary>
+    [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<ActionResult> Edit(int id, Edit.Model model, CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(new Edit.Command(id, model), cancellationToken);
+        return response is null ? NotFound() : NoContent();
+    }
+
+    /// <summary>
+    /// Delete User
+    /// </summary>
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<ActionResult> Delete(int id, CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(new Delete.Command(id), cancellationToken);
+        return response is null ? NotFound() : NoContent();
+    }
+
+    /// <summary>
+    /// Create User Session (Login)
+    /// </summary>
+    [HttpPost("Session")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CreateSession.Fail), StatusCodes.Status400BadRequest)]
+    [AllowAnonymous]
+    public async Task<ActionResult<CreateSession.Success>> CreateSession([FromBody] CreateSession.Model model, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new CreateSession.Command(model), cancellationToken);
+        return result.Match<ActionResult>(
+            success => Ok(success),
+            error => BadRequest(error)
+        );
+    }
 }
