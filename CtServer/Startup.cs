@@ -120,6 +120,7 @@ public class Startup
             {
                 policy.AllowAnyOrigin();
                 policy.AllowAnyHeader();
+                policy.AllowAnyMethod();
             });
         }
 
