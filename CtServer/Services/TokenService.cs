@@ -1,20 +1,19 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using CtServer.Options;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace CtServer.Services;
 
 public class TokenService
 {
-    public const string SecretName = "JWT_SECRET";
-
     private readonly SymmetricSecurityKey _key;
 
-    public TokenService(IConfiguration configuration)
+    public TokenService(IOptions<JwtOptions> jwtOptions)
     {
-        string secret = configuration[SecretName];
-        byte[] bytes = Encoding.ASCII.GetBytes(secret);
+        byte[] bytes = Encoding.ASCII.GetBytes(jwtOptions.Value.Secret);
         _key = new SymmetricSecurityKey(bytes);
     }
 

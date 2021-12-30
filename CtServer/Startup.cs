@@ -1,4 +1,5 @@
 using System.Text;
+using CtServer.Options;
 using CtServer.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -72,11 +73,13 @@ public class Startup
         })
         .AddJwtBearer(x =>
         {
+            JwtOptions options = Configuration.GetSection(JwtOptions.Section).Get<JwtOptions>();
+
             x.SaveToken = true;
             x.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration[TokenService.SecretName])),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(options.Secret)),
 
                 // For now
                 ValidateIssuer = false,
@@ -90,6 +93,8 @@ public class Startup
 
         services.AddSingleton<TokenService>();
         services.AddSingleton<PasswordService>();
+
+        services.Configure<JwtOptions>(Configuration.GetSection(JwtOptions.Section));
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

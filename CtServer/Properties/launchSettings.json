@@ -8,7 +8,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DB_STRING": "Host=localhost;Port=54320;Database=ct;Username=postgres;Password=example;Include Error Detail=true",
-        "JWT_SECRET": "placeholder - replace in prod#32"
+        "Jwt__Secret": "placeholder - replace in prod#32"
       }
     }
   }
