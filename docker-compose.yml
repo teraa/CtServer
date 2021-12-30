@@ -18,6 +18,13 @@ services:
     # - DB_STRING=Host=host.docker.internal;Port=5055;Database=ct;Username=postgres;Password=example;Include Error Detail=true
       - Jwt__Secret=placeholder - replace in prod#32
 
+      # https://console.firebase.google.com/
+      - WebPush__IsEnabled=false
+      - WebPush__ServerKey=
+      - WebPush__SenderId=
+      - WebPush__Subject=mailto:example@example.com
+      - WebPush__PublicKey=
+      - WebPush__PrivateKey=
   db:
     image: postgres
     container_name: ct-db
