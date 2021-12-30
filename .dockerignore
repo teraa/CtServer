@@ -10,3 +10,4 @@ Dockerfile*
 **/*.md
 .editorconfig
 .gitignore
+.env
