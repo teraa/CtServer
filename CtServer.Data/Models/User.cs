@@ -11,4 +11,5 @@ public class User
 
     public ICollection<UserEvent> UserEvents { get; set; }
     public ICollection<Event> Events { get; set; }
+    public ICollection<Subscription> Subscriptions { get; set; }
 }
