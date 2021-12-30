@@ -1,8 +1,8 @@
 using OneOf;
 
-namespace CtServer.Features.Users;
+namespace CtServer.Features.Users.Subscriptions;
 
-public static class DeleteSubscription
+public static class Delete
 {
     public record Command
     (

@@ -1,7 +1,7 @@
 using CtServer.Services;
 using WebPush;
 
-namespace CtServer.Features.Events.Notifications;
+namespace CtServer.Features.Events;
 
 public static class Edited
 {

@@ -73,13 +73,13 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Create User Session (Login)
     /// </summary>
-    [HttpPost("Sessions")]
+    [HttpPost(nameof(Sessions))]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(CreateSession.Fail), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Sessions.Create.Fail), StatusCodes.Status400BadRequest)]
     [AllowAnonymous]
-    public async Task<ActionResult<CreateSession.Success>> CreateSession([FromBody] CreateSession.Model model, CancellationToken cancellationToken)
+    public async Task<ActionResult<Sessions.Create.Success>> CreateSession([FromBody] Sessions.Create.Model model, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new CreateSession.Command(model), cancellationToken);
+        var result = await _mediator.Send(new Sessions.Create.Command(model), cancellationToken);
         return result.Match<ActionResult>(
             success => Ok(success),
             error => BadRequest(error)
@@ -91,9 +91,9 @@ public class UsersController : ControllerBase
     /// </summary>
     [HttpGet($"{{id}}/{nameof(Events)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<GetEvents.Model>>> GetEvents(int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<Events.Index.Model>>> GetEvents(int id, CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(new GetEvents.Query(id), cancellationToken);
+        var response = await _mediator.Send(new Events.Index.Query(id), cancellationToken);
         return response is null ? NotFound() : response;
     }
 
@@ -102,9 +102,9 @@ public class UsersController : ControllerBase
     /// </summary>
     [HttpPost($"{{id}}/{nameof(Events)}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<ActionResult> AddEvent(int id, AddEvent.Model model, CancellationToken cancellationToken)
+    public async Task<ActionResult> AddEvent(int id, Events.Add.Model model, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new AddEvent.Command(id, model), cancellationToken);
+        var result = await _mediator.Send(new Events.Add.Command(id, model), cancellationToken);
         return result.Match<ActionResult>(
             success => NoContent(),
             notFound => NotFound(),
@@ -116,31 +116,31 @@ public class UsersController : ControllerBase
     /// </summary>
     [HttpDelete($"{{id}}/{nameof(Events)}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<ActionResult> RemoveEvent(int id, RemoveEvent.Model model, CancellationToken cancellationToken)
+    public async Task<ActionResult> RemoveEvent(int id, Events.Remove.Model model, CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(new RemoveEvent.Command(id, model), cancellationToken);
+        var response = await _mediator.Send(new Events.Remove.Command(id, model), cancellationToken);
         return response is null ? NotFound() : NoContent();
     }
 
     /// <summary>
     /// Get User Subscriptions
     /// </summary>
-    [HttpGet("{id}/Subscriptions")]
+    [HttpGet($"{{id}}/{nameof(Subscriptions)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<GetSubscriptions.Model>>> GetSubscription(int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<Subscriptions.Index.Model>>> GetSubscription(int id, CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(new GetSubscriptions.Query(id), cancellationToken);
+        var response = await _mediator.Send(new Subscriptions.Index.Query(id), cancellationToken);
         return response is null ? NotFound() : response;
     }
 
     /// <summary>
     /// Create User Subscription
     /// </summary>
-    [HttpPost("{id}/Subscriptions")]
+    [HttpPost($"{{id}}/{nameof(Subscriptions)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> CreateSubscription(int id, CreateSubscription.Model model, CancellationToken cancellationToken)
+    public async Task<ActionResult> CreateSubscription(int id, Subscriptions.Create.Model model, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new CreateSubscription.Command(id, model), cancellationToken);
+        var result = await _mediator.Send(new Subscriptions.Create.Command(id, model), cancellationToken);
         return result.Match<ActionResult>(
             success => Ok(success),
             notFound => NotFound()
@@ -150,11 +150,11 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Delete User Subscription
     /// </summary>
-    [HttpDelete("{id}/Subscriptions")]
+    [HttpDelete($"{{id}}/{nameof(Subscriptions)}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<ActionResult> DeleteSubscription(int id, DeleteSubscription.Model model, CancellationToken cancellationToken)
+    public async Task<ActionResult> DeleteSubscription(int id, Subscriptions.Delete.Model model, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new DeleteSubscription.Command(id, model), cancellationToken);
+        var result = await _mediator.Send(new Subscriptions.Delete.Command(id, model), cancellationToken);
         return result.Match<ActionResult>(
             success => NoContent(),
             notFound => NotFound()

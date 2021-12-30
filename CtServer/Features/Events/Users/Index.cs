@@ -1,6 +1,6 @@
-namespace CtServer.Features.Events;
+namespace CtServer.Features.Events.Users;
 
-public static class GetUsers
+public static class Index
 {
     public record Query(int EventId) : IRequest<Model[]?>;
 

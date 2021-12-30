@@ -70,9 +70,9 @@ public class EventsController : ControllerBase
     /// </summary>
     [HttpGet($"{{id}}/{nameof(Sections)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<GetSections.Model>>> GetSections(int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<Sections.Index.Model>>> GetSections(int id, CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(new GetSections.Query(id), cancellationToken);
+        var response = await _mediator.Send(new Sections.Index.Query(id), cancellationToken);
         return response is null ? NotFound() : response;
     }
 
@@ -81,9 +81,9 @@ public class EventsController : ControllerBase
     /// </summary>
     [HttpGet($"{{id}}/{nameof(Locations)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<GetLocations.Model>>> GetLocations(int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<Locations.Index.Model>>> GetLocations(int id, CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(new GetLocations.Query(id), cancellationToken);
+        var response = await _mediator.Send(new Locations.Index.Query(id), cancellationToken);
         return response is null ? NotFound() : response;
     }
 
@@ -92,9 +92,9 @@ public class EventsController : ControllerBase
     /// </summary>
     [HttpGet($"{{id}}/{nameof(Users)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<GetUsers.Model>>> GetUsers(int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<Users.Index.Model>>> GetUsers(int id, CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(new GetUsers.Query(id), cancellationToken);
+        var response = await _mediator.Send(new Users.Index.Query(id), cancellationToken);
         return response is null ? NotFound() : response;
     }
 }

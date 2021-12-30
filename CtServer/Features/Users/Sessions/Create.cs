@@ -1,9 +1,9 @@
 using CtServer.Services;
 using OneOf;
 
-namespace CtServer.Features.Users;
+namespace CtServer.Features.Users.Sessions;
 
-public static class CreateSession
+public static class Create
 {
     public record Command
     (

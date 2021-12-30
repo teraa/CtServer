@@ -1,9 +1,9 @@
 using CtServer.Data.Models;
 using OneOf;
 
-namespace CtServer.Features.Users;
+namespace CtServer.Features.Users.Subscriptions;
 
-public static class CreateSubscription
+public static class Create
 {
     public record Command
     (

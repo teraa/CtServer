@@ -1,16 +1,12 @@
-namespace CtServer.Features.Users;
+namespace CtServer.Features.Users.Subscriptions;
 
-public static class GetEvents
+public static class Index
 {
     public record Query(int UserId) : IRequest<Model[]?>;
 
     public record Model
     (
-        int Id,
-        string Title,
-        string Description,
-        DateTimeOffset StartAt,
-        DateTimeOffset EndAt
+        int Id
     );
 
     public class Handler : IRequestHandler<Query, Model[]?>
@@ -22,18 +18,13 @@ public static class GetEvents
 
         public async Task<Model[]?> Handle(Query request, CancellationToken cancellationToken)
         {
-            var models = await _ctx.Users
+            var models = await _ctx.Subscriptions
                 .AsNoTracking()
-                .Where(x => x.Id == request.UserId)
-                .SelectMany(x => x.Events)
+                .Where(x => x.UserId == request.UserId)
                 .OrderBy(x => x.Id)
                 .Select(x => new Model
                 (
-                    x.Id,
-                    x.Title,
-                    x.Description,
-                    x.StartAt,
-                    x.EndAt
+                    x.Id
                 ))
                 .ToArrayAsync(cancellationToken)
                 .ConfigureAwait(false);

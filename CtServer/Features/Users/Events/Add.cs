@@ -1,9 +1,9 @@
 using CtServer.Data.Models;
 using OneOf;
 
-namespace CtServer.Features.Users;
+namespace CtServer.Features.Users.Events;
 
-public static class AddEvent
+public static class Add
 {
     public record Command
     (

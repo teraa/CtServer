@@ -1,6 +1,6 @@
-namespace CtServer.Features.Users;
+namespace CtServer.Features.Users.Events;
 
-public static class RemoveEvent
+public static class Remove
 {
     public record Command
     (

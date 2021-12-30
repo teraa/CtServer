@@ -1,19 +1,13 @@
-namespace CtServer.Features.Sections;
+namespace CtServer.Features.Events.Locations;
 
-public static class GetPresentations
+public static class Index
 {
-    public record Query(int SectionId) : IRequest<Model[]?>;
+    public record Query(int EventId) : IRequest<Model[]?>;
 
     public record Model
     (
         int Id,
-        string Title,
-        string[] Authors,
-        string Description,
-        int Position,
-        int DurationMinutes,
-        string? Attachment,
-        string? MainAuthorPhoto
+        string Name
     );
 
     public class Handler : IRequestHandler<Query, Model[]?>
@@ -25,28 +19,22 @@ public static class GetPresentations
 
         public async Task<Model[]?> Handle(Query request, CancellationToken cancellationToken)
         {
-            var models = await _ctx.Presentations
+            var models = await _ctx.Locations
                 .AsNoTracking()
+                .Where(x => x.EventId == request.EventId)
                 .OrderBy(x => x.Id)
                 .Select(x => new Model
                 (
                     x.Id,
-                    x.Title,
-                    x.Authors,
-                    x.Description,
-                    x.Position,
-                    (int)x.Duration.TotalMinutes,
-                    x.Attachment,
-                    x.MainAuthorPhoto
+                    x.Name
                 ))
                 .ToArrayAsync(cancellationToken)
                 .ConfigureAwait(false);
 
-
             if (!models.Any())
             {
-                var exists = await _ctx.Sections
-                    .AnyAsync(x => x.Id == request.SectionId, cancellationToken)
+                var exists = await _ctx.Events
+                    .AnyAsync(x => x.Id == request.EventId, cancellationToken)
                     .ConfigureAwait(false);
 
                 if (!exists)

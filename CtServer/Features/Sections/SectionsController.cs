@@ -70,9 +70,9 @@ public class SectionsController : ControllerBase
     /// </summary>
     [HttpGet($"{{id}}/{nameof(Presentations)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<GetPresentations.Model>>> GetPresentations(int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<Presentations.Index.Model>>> GetPresentations(int id, CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(new GetPresentations.Query(id), cancellationToken);
+        var response = await _mediator.Send(new Presentations.Index.Query(id), cancellationToken);
         return response is null ? NotFound() : response;
     }
 }

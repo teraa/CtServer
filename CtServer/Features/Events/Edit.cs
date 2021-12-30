@@ -56,7 +56,7 @@ public static class Edit
 
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-            await _mediator.Publish(new Notifications.Edited.Notification(new(request.Id)))
+            await _mediator.Publish(new Edited.Notification(new(request.Id)))
                 .ConfigureAwait(false);
 
             return new();
