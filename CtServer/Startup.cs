@@ -93,8 +93,10 @@ public class Startup
 
         services.AddSingleton<TokenService>();
         services.AddSingleton<PasswordService>();
+        services.AddSingleton<NotificationService>();
 
         services.Configure<JwtOptions>(Configuration.GetSection(JwtOptions.Section));
+        services.Configure<WebPushOptions>(Configuration.GetSection(WebPushOptions.Section));
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

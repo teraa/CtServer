@@ -32,9 +32,13 @@ public static class Edit
     public class Handler : IRequestHandler<Command, Response?>
     {
         private readonly CtDbContext _ctx;
+        private readonly IMediator _mediator;
 
-        public Handler(CtDbContext ctx)
-            => _ctx = ctx;
+        public Handler(CtDbContext ctx, IMediator mediator)
+        {
+            _ctx = ctx;
+            _mediator = mediator;
+        }
 
         public async Task<Response?> Handle(Command request, CancellationToken cancellationToken)
         {
@@ -51,6 +55,9 @@ public static class Edit
             entity.EndAt = request.Model.EndAt;
 
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+            await _mediator.Publish(new Notifications.Edited.Notification(new(request.Id)))
+                .ConfigureAwait(false);
 
             return new();
         }
