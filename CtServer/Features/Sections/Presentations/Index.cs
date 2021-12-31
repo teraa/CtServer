@@ -42,7 +42,6 @@ public static class Index
                 .ToArrayAsync(cancellationToken)
                 .ConfigureAwait(false);
 
-
             if (!models.Any())
             {
                 var exists = await _ctx.Sections

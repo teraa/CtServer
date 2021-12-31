@@ -7,7 +7,6 @@ public static class Delete
 {
     public record Command(int Id) : IRequest<OneOf<Success, NotFound>>;
 
-
     public class Handler : IRequestHandler<Command, OneOf<Success, NotFound>>
     {
         private readonly CtDbContext _ctx;

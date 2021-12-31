@@ -21,7 +21,6 @@ public static class Edit
         }
     }
 
-
     public class Handler : IRequestHandler<Command, OneOf<Success, NotFound>>
     {
         private readonly CtDbContext _ctx;

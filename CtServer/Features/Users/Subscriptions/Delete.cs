@@ -13,7 +13,6 @@ public static class Delete
 
     public record Model(int Id);
 
-
     public class Handler : IRequestHandler<Command, OneOf<Success, NotFound>>
     {
         private readonly CtDbContext _ctx;
