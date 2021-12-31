@@ -2,28 +2,28 @@ using CtServer.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CtServer.Features.Locations;
+namespace CtServer.Features.Sections;
 
 [ApiController]
 [Produces("application/json")]
-[Route("api/[controller]")]
+[Route($"api/{nameof(Sections)}")]
 [Authorize]
-public class LocationsController : ControllerBase
+public class Controller : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    public LocationsController(IMediator mediator)
+    public Controller(IMediator mediator)
         => _mediator = mediator;
 
     /// <summary>
-    /// Get All Locations
+    /// Get All Sections
     /// </summary>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ReadModel>>> Index(CancellationToken cancellationToken)
         => await _mediator.Send(new Index.Query(), cancellationToken);
 
     /// <summary>
-    /// Create Location
+    /// Create Section
     /// </summary>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -34,7 +34,7 @@ public class LocationsController : ControllerBase
     }
 
     /// <summary>
-    /// Get Location
+    /// Get Section
     /// </summary>
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -45,7 +45,7 @@ public class LocationsController : ControllerBase
     }
 
     /// <summary>
-    /// Edit Location
+    /// Edit Section
     /// </summary>
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -59,7 +59,7 @@ public class LocationsController : ControllerBase
     }
 
     /// <summary>
-    /// Delete Location
+    /// Delete Section
     /// </summary>
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -70,5 +70,17 @@ public class LocationsController : ControllerBase
             (Success _) => NoContent(),
             (NotFound _) => NotFound()
         );
+    }
+
+    /// <summary>
+    /// Get Section Presentations
+    /// </summary>
+    /// <param name="id">Section ID</param>
+    [HttpGet($"{{id}}/{nameof(Presentations)}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<Presentations.Index.Model>>> IndexPresentations(int id, CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(new Presentations.Index.Query(id), cancellationToken);
+        return response is null ? NotFound() : response;
     }
 }
