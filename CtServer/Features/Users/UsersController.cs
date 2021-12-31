@@ -19,7 +19,7 @@ public class UsersController : ControllerBase
     /// Get All Users
     /// </summary>
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Index.Model>>> Index(CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<ReadModel>>> Index(CancellationToken cancellationToken)
         => await _mediator.Send(new Index.Query(), cancellationToken);
 
     /// <summary>
@@ -43,7 +43,7 @@ public class UsersController : ControllerBase
     /// </summary>
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<Get.Model>> Get(int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<ReadModel>> Get(int id, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new Get.Query(id), cancellationToken);
         return response is null ? NotFound() : response;

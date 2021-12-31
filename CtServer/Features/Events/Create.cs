@@ -6,27 +6,8 @@ public static class Create
 {
     public record Command
     (
-        Model Model
+        WriteModel Model
     ) : IRequest<Response>;
-
-    public record Model
-    (
-        string Title,
-        string Description,
-        DateTimeOffset StartAt,
-        DateTimeOffset EndAt
-    );
-
-    public class ModelValidator : AbstractValidator<Model>
-    {
-        public ModelValidator()
-        {
-            RuleFor(x => x.Title).NotEmpty();
-            RuleFor(x => x.Description).NotNull();
-            RuleFor(x => x.StartAt).NotEmpty();
-            RuleFor(x => x.EndAt).NotEmpty();
-        }
-    }
 
     public record Response(int Id);
 

@@ -8,24 +8,8 @@ public static class Edit
     public record Command
     (
         int Id,
-        Model Model
+        WriteModel Model
     ) : IRequest<OneOf<Success, NotFound>>;
-
-    public record Model
-    (
-        int EventId,
-        string Name
-    );
-
-    public class ModelValidator : AbstractValidator<Model>
-    {
-        public ModelValidator()
-        {
-            RuleFor(x => x.EventId).GreaterThan(0);
-            RuleFor(x => x.Name).NotEmpty();
-        }
-    }
-
 
     public class Handler : IRequestHandler<Command, OneOf<Success, NotFound>>
     {

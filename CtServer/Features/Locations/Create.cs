@@ -6,23 +6,8 @@ public static class Create
 {
     public record Command
     (
-        Model Model
+        WriteModel Model
     ) : IRequest<Response>;
-
-    public record Model
-    (
-        int EventId,
-        string Name
-    );
-
-    public class ModelValidator : AbstractValidator<Model>
-    {
-        public ModelValidator()
-        {
-            RuleFor(x => x.EventId).GreaterThan(0);
-            RuleFor(x => x.Name).NotEmpty();
-        }
-    }
 
     public record Response(int Id);
 

@@ -8,28 +8,8 @@ public static class Edit
     public record Command
     (
         int Id,
-        Model Model
+        WriteModel Model
     ) : IRequest<OneOf<Success, NotFound>>;
-
-    public record Model
-    (
-        string Title,
-        string Description,
-        DateTimeOffset StartAt,
-        DateTimeOffset EndAt
-    );
-
-    public class ModelValidator : AbstractValidator<Model>
-    {
-        public ModelValidator()
-        {
-            RuleFor(x => x.Title).NotEmpty();
-            RuleFor(x => x.Description).NotNull();
-            RuleFor(x => x.StartAt).NotEmpty();
-            RuleFor(x => x.EndAt).NotEmpty();
-        }
-    }
-
 
     public class Handler : IRequestHandler<Command, OneOf<Success, NotFound>>
     {
