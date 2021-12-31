@@ -1,3 +1,4 @@
+using CtServer.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,14 +27,14 @@ public class UsersController : ControllerBase
     /// </summary>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(Create.Fail), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Fail), StatusCodes.Status400BadRequest)]
     [AllowAnonymous]
     public async Task<ActionResult<Create.Success>> Create([FromBody] Create.Model model, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new Create.Command(model), cancellationToken);
         return result.Match<ActionResult>(
-            success => CreatedAtAction(actionName: nameof(Get), routeValues: new { id = success.Id }, value: success),
-            error => BadRequest(error)
+            (Create.Success x) => CreatedAtAction(actionName: nameof(Get), routeValues: new { id = x.Id }, value: x),
+            (Fail x) => BadRequest(x)
         );
     }
 
@@ -55,8 +56,11 @@ public class UsersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Edit(int id, Edit.Model model, CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(new Edit.Command(id, model), cancellationToken);
-        return response is null ? NotFound() : NoContent();
+        var result = await _mediator.Send(new Edit.Command(id, model), cancellationToken);
+        return result.Match<ActionResult>(
+            (Success _) => NoContent(),
+            (NotFound _) => NotFound()
+        );
     }
 
     /// <summary>
@@ -66,8 +70,11 @@ public class UsersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Delete(int id, CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(new Delete.Command(id), cancellationToken);
-        return response is null ? NotFound() : NoContent();
+        var result = await _mediator.Send(new Delete.Command(id), cancellationToken);
+        return result.Match<ActionResult>(
+            (Success _) => NoContent(),
+            (NotFound _) => NotFound()
+        );
     }
 
     /// <summary>
@@ -75,14 +82,14 @@ public class UsersController : ControllerBase
     /// </summary>
     [HttpPost(nameof(Sessions))]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(Sessions.Create.Fail), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Fail), StatusCodes.Status400BadRequest)]
     [AllowAnonymous]
     public async Task<ActionResult<Sessions.Create.Success>> CreateSession([FromBody] Sessions.Create.Model model, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new Sessions.Create.Command(model), cancellationToken);
         return result.Match<ActionResult>(
-            success => Ok(success),
-            error => BadRequest(error)
+            (Sessions.Create.Success x) => Ok(x),
+            (Fail x) => BadRequest(x)
         );
     }
 
@@ -108,9 +115,9 @@ public class UsersController : ControllerBase
     {
         var result = await _mediator.Send(new Events.Add.Command(id, model), cancellationToken);
         return result.Match<ActionResult>(
-            success => NoContent(),
-            notFound => NotFound(),
-            error => BadRequest(error)
+            (Success _) => NoContent(),
+            (NotFound _) => NotFound(),
+            (Fail x) => BadRequest(x)
         );
     }
     /// <summary>
@@ -121,8 +128,11 @@ public class UsersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> RemoveEvent(int id, Events.Remove.Model model, CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(new Events.Remove.Command(id, model), cancellationToken);
-        return response is null ? NotFound() : NoContent();
+        var result = await _mediator.Send(new Events.Remove.Command(id, model), cancellationToken);
+        return result.Match<ActionResult>(
+            (Success _) => NoContent(),
+            (NotFound _) => NotFound()
+        );
     }
 
     /// <summary>
@@ -147,8 +157,8 @@ public class UsersController : ControllerBase
     {
         var result = await _mediator.Send(new Subscriptions.Create.Command(id, model), cancellationToken);
         return result.Match<ActionResult>(
-            success => Ok(success),
-            notFound => NotFound()
+            (Subscriptions.Create.Success x) => Ok(x),
+            (NotFound _) => NotFound()
         );
     }
 
@@ -162,8 +172,8 @@ public class UsersController : ControllerBase
     {
         var result = await _mediator.Send(new Subscriptions.Delete.Command(id, model), cancellationToken);
         return result.Match<ActionResult>(
-            success => NoContent(),
-            notFound => NotFound()
+            (Success _) => NoContent(),
+            (NotFound _) => NotFound()
         );
     }
 }

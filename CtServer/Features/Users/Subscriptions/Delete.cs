@@ -1,3 +1,4 @@
+using CtServer.Results;
 using OneOf;
 
 namespace CtServer.Features.Users.Subscriptions;
@@ -12,8 +13,6 @@ public static class Delete
 
     public record Model(int Id);
 
-    public record Success;
-    public record NotFound;
 
     public class Handler : IRequestHandler<Command, OneOf<Success, NotFound>>
     {

@@ -1,3 +1,4 @@
+using CtServer.Results;
 using CtServer.Services;
 using OneOf;
 
@@ -17,7 +18,6 @@ public static class Create
     );
 
     public record Success(int UserId, string Token);
-    public record Fail(IEnumerable<string> Errors);
 
     public class Handler : IRequestHandler<Command, OneOf<Success, Fail>>
     {
@@ -48,7 +48,7 @@ public static class Create
                 .ConfigureAwait(false);
 
             if (user is null || !_passwordService.Test(request.Model.Password, user.PasswordHash, user.PasswordSalt))
-                return new Fail(new[] { "Invalid username and/or password." });
+                return new Fail("Invalid username and/or password.");
 
             var token = _tokenService.CreateToken(user.Id);
 

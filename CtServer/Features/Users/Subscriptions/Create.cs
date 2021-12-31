@@ -1,4 +1,5 @@
 using CtServer.Data.Models;
+using CtServer.Results;
 using OneOf;
 
 namespace CtServer.Features.Users.Subscriptions;
@@ -36,7 +37,6 @@ public static class Create
     }
 
     public record Success(int Id);
-    public record NotFound;
 
     public class Handler : IRequestHandler<Command, OneOf<Success, NotFound>>
     {

@@ -1,3 +1,6 @@
+using CtServer.Results;
+using OneOf;
+
 namespace CtServer.Features.Events;
 
 public static class Edit
@@ -6,7 +9,7 @@ public static class Edit
     (
         int Id,
         Model Model
-    ) : IRequest<Response?>;
+    ) : IRequest<OneOf<Success, NotFound>>;
 
     public record Model
     (
@@ -27,9 +30,8 @@ public static class Edit
         }
     }
 
-    public record Response;
 
-    public class Handler : IRequestHandler<Command, Response?>
+    public class Handler : IRequestHandler<Command, OneOf<Success, NotFound>>
     {
         private readonly CtDbContext _ctx;
         private readonly IMediator _mediator;
@@ -40,14 +42,14 @@ public static class Edit
             _mediator = mediator;
         }
 
-        public async Task<Response?> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<OneOf<Success, NotFound>> Handle(Command request, CancellationToken cancellationToken)
         {
             var entity = await _ctx.Events
                 .AsQueryable()
                 .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken)
                 .ConfigureAwait(false);
 
-            if (entity is null) return null;
+            if (entity is null) return new NotFound();
 
             entity.Title = request.Model.Title;
             entity.Description = request.Model.Description;
@@ -59,7 +61,7 @@ public static class Edit
             await _mediator.Publish(new Edited.Notification(new(request.Id)))
                 .ConfigureAwait(false);
 
-            return new();
+            return new Success();
         }
     }
 }

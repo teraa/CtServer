@@ -1,3 +1,4 @@
+using CtServer.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -50,8 +51,11 @@ public class LocationsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Edit(int id, Edit.Model model, CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(new Edit.Command(id, model), cancellationToken);
-        return response is null ? NotFound() : NoContent();
+        var result = await _mediator.Send(new Edit.Command(id, model), cancellationToken);
+        return result.Match<ActionResult>(
+            (Success _) => NoContent(),
+            (NotFound _) => NotFound()
+        );
     }
 
     /// <summary>
@@ -61,7 +65,10 @@ public class LocationsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Delete(int id, CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(new Delete.Command(id), cancellationToken);
-        return response is null ? NotFound() : NoContent();
+        var result = await _mediator.Send(new Delete.Command(id), cancellationToken);
+        return result.Match<ActionResult>(
+            (Success _) => NoContent(),
+            (NotFound _) => NotFound()
+        );
     }
 }
