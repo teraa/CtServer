@@ -1,5 +1,4 @@
 using CtServer.Data.Models;
-using CtServer.Results;
 using OneOf;
 
 namespace CtServer.Features.Users.Events;

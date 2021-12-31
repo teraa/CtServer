@@ -1,4 +1,4 @@
-namespace CtServer.Results;
+namespace CtServer.Features;
 
 public record struct Success;
 public record struct NotFound;

@@ -1,4 +1,3 @@
-using CtServer.Results;
 using OneOf;
 
 namespace CtServer.Features.Users.Events;
