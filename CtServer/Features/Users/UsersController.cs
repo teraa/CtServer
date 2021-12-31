@@ -143,7 +143,7 @@ public class UsersController : ControllerBase
     /// <param name="id">User ID</param>
     [HttpPost($"{{id}}/{nameof(Subscriptions)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> CreateSubscription(int id, Subscriptions.Create.Model model, CancellationToken cancellationToken)
+    public async Task<ActionResult<Subscriptions.Create.Success>> CreateSubscription(int id, Subscriptions.Create.Model model, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new Subscriptions.Create.Command(id, model), cancellationToken);
         return result.Match<ActionResult>(
