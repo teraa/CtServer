@@ -23,6 +23,14 @@ public record ReadModel
         );
 }
 
+public record WriteModel
+(
+    string Title,
+    string Description,
+    DateTimeOffset StartAt,
+    DateTimeOffset EndAt
+);
+
 public class WriteModelValidator : AbstractValidator<WriteModel>
 {
     public WriteModelValidator()
@@ -33,11 +41,3 @@ public class WriteModelValidator : AbstractValidator<WriteModel>
         RuleFor(x => x.EndAt).NotEmpty();
     }
 }
-
-public record WriteModel
-(
-    string Title,
-    string Description,
-    DateTimeOffset StartAt,
-    DateTimeOffset EndAt
-);
