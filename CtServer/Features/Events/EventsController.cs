@@ -68,6 +68,7 @@ public class EventsController : ControllerBase
     /// <summary>
     /// Get Event Sections
     /// </summary>
+    /// <param name="id">Event ID</param>
     [HttpGet($"{{id}}/{nameof(Sections)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<Sections.Index.Model>>> GetSections(int id, CancellationToken cancellationToken)
@@ -79,6 +80,7 @@ public class EventsController : ControllerBase
     /// <summary>
     /// Get Event Locations
     /// </summary>
+    /// <param name="id">Event ID</param>
     [HttpGet($"{{id}}/{nameof(Locations)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<Locations.Index.Model>>> GetLocations(int id, CancellationToken cancellationToken)
@@ -90,6 +92,7 @@ public class EventsController : ControllerBase
     /// <summary>
     /// Get Event Users
     /// </summary>
+    /// <param name="id">Event ID</param>
     [HttpGet($"{{id}}/{nameof(Users)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<Users.Index.Model>>> GetUsers(int id, CancellationToken cancellationToken)

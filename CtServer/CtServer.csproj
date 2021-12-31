@@ -5,7 +5,9 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>1591</NoWarn>
+    <!-- 1591: Missing XML comment for publicly visible type or member -->
+    <!-- 1573: Parameter 'parameter' has no matching param tag in the XML comment for 'parameter' (but other parameters do) -->
+    <NoWarn>1591,1573</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

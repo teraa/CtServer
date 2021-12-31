@@ -89,6 +89,7 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Get User Events
     /// </summary>
+    /// <param name="id">User ID</param>
     [HttpGet($"{{id}}/{nameof(Events)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<Events.Index.Model>>> GetEvents(int id, CancellationToken cancellationToken)
@@ -100,6 +101,7 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Add User Event
     /// </summary>
+    /// <param name="id">User ID</param>
     [HttpPost($"{{id}}/{nameof(Events)}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> AddEvent(int id, Events.Add.Model model, CancellationToken cancellationToken)
@@ -114,6 +116,7 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Remove User Event
     /// </summary>
+    /// <param name="id">User ID</param>
     [HttpDelete($"{{id}}/{nameof(Events)}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> RemoveEvent(int id, Events.Remove.Model model, CancellationToken cancellationToken)
@@ -125,6 +128,7 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Get User Subscriptions
     /// </summary>
+    /// <param name="id">User ID</param>
     [HttpGet($"{{id}}/{nameof(Subscriptions)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<Subscriptions.Index.Model>>> GetSubscription(int id, CancellationToken cancellationToken)
@@ -136,6 +140,7 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Create User Subscription
     /// </summary>
+    /// <param name="id">User ID</param>
     [HttpPost($"{{id}}/{nameof(Subscriptions)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> CreateSubscription(int id, Subscriptions.Create.Model model, CancellationToken cancellationToken)
@@ -150,6 +155,7 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Delete User Subscription
     /// </summary>
+    /// <param name="id">User ID</param>
     [HttpDelete($"{{id}}/{nameof(Subscriptions)}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> DeleteSubscription(int id, Subscriptions.Delete.Model model, CancellationToken cancellationToken)

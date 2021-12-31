@@ -68,6 +68,7 @@ public class SectionsController : ControllerBase
     /// <summary>
     /// Get Section Presentations
     /// </summary>
+    /// <param name="id">Section ID</param>
     [HttpGet($"{{id}}/{nameof(Presentations)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<Presentations.Index.Model>>> GetPresentations(int id, CancellationToken cancellationToken)
