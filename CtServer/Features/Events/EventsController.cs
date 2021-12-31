@@ -6,13 +6,13 @@ namespace CtServer.Features.Events;
 
 [ApiController]
 [Produces("application/json")]
-[Route($"api/{nameof(Events)}")]
+[Route("api/[controller]")]
 [Authorize]
-public class Controller : ControllerBase
+public class EventsController : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    public Controller(IMediator mediator)
+    public EventsController(IMediator mediator)
         => _mediator = mediator;
 
     /// <summary>

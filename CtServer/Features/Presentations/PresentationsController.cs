@@ -6,13 +6,13 @@ namespace CtServer.Features.Presentations;
 
 [ApiController]
 [Produces("application/json")]
-[Route($"api/{nameof(Presentations)}")]
+[Route("api/[controller]")]
 [Authorize]
-public class Controller : ControllerBase
+public class PresentationsController : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    public Controller(IMediator mediator)
+    public PresentationsController(IMediator mediator)
         => _mediator = mediator;
 
     /// <summary>
