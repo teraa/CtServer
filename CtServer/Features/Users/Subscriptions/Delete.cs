@@ -10,7 +10,7 @@ public static class Delete
         Model Model
     ) : IRequest<OneOf<Success, NotFound>>;
 
-    public record Model (int Id);
+    public record Model(int Id);
 
     public record Success;
     public record NotFound;
