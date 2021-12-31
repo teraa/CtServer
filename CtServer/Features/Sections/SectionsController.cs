@@ -71,7 +71,7 @@ public class SectionsController : ControllerBase
     /// <param name="id">Section ID</param>
     [HttpGet($"{{id}}/{nameof(Presentations)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<Presentations.Index.Model>>> GetPresentations(int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<Presentations.Index.Model>>> IndexPresentations(int id, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new Presentations.Index.Query(id), cancellationToken);
         return response is null ? NotFound() : response;
