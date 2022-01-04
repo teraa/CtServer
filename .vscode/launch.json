@@ -29,7 +29,8 @@
             "console": "externalTerminal",
             "logging": {
                 "moduleLoad": false
-            }
+            },
+            "internalConsoleOptions": "neverOpen"
         },
         {
             "name": ".NET Attach",
