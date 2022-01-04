@@ -75,7 +75,7 @@ public class Startup
         })
         .AddJwtBearer(x =>
         {
-            JwtOptions options = Configuration.GetSection(JwtOptions.Section).Get<JwtOptions>();
+            JwtOptions options = Configuration.GetOptions<JwtOptions>();
 
             x.SaveToken = true;
             x.TokenValidationParameters = new TokenValidationParameters
@@ -116,8 +116,8 @@ public class Startup
 
         services.AddScoped<IAuthorizationHandler, AdminAuthorizationHandler>();
 
-        services.Configure<JwtOptions>(Configuration.GetSection(JwtOptions.Section));
-        services.Configure<WebPushOptions>(Configuration.GetSection(WebPushOptions.Section));
+        services.AddOptionsWithSection<JwtOptions>(Configuration);
+        services.AddOptionsWithSection<WebPushOptions>(Configuration);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

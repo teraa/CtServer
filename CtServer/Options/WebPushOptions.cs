@@ -3,8 +3,6 @@ namespace CtServer.Options;
 
 public class WebPushOptions
 {
-    public const string Section = "WebPush";
-
     public bool IsEnabled { get; init; }
     public string ServerKey { get; init; }
     public string SenderId { get; init; }
