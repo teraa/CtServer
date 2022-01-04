@@ -1,8 +1,10 @@
 using System.Text;
+using CtServer.Authorization;
 using CtServer.Options;
 using CtServer.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -89,11 +91,30 @@ public class Startup
             };
         });
 
-        services.AddAuthorization();
+        services.AddAuthorization(x =>
+        {
+            x.AddPolicy("CurrentUser", builder =>
+            {
+                builder.RequireAssertion(ctx =>
+                {
+                    return ctx.Resource is HttpContext httpContext
+                        && httpContext.Request.RouteValues.TryGetValue("id", out object? idObj)
+                        && idObj is string id
+                        && httpContext.User.HasUserId(id);
+                });
+            });
+
+            x.AddPolicy("Admin", builder =>
+            {
+                builder.AddRequirements(new AdminRequirement());
+            });
+        });
 
         services.AddSingleton<TokenService>();
         services.AddSingleton<PasswordService>();
         services.AddSingleton<NotificationService>();
+
+        services.AddScoped<IAuthorizationHandler, AdminAuthorizationHandler>();
 
         services.Configure<JwtOptions>(Configuration.GetSection(JwtOptions.Section));
         services.Configure<WebPushOptions>(Configuration.GetSection(WebPushOptions.Section));
