@@ -110,6 +110,7 @@ public class Startup
             });
         });
 
+        services.AddScoped<SeedService>();
         services.AddSingleton<TokenService>();
         services.AddSingleton<PasswordService>();
         services.AddSingleton<NotificationService>();

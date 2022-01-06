@@ -1,3 +1,5 @@
+using CtServer.Services;
+
 namespace CtServer;
 
 public class Program
@@ -11,9 +13,8 @@ public class Program
             var ctx = scope.ServiceProvider.GetRequiredService<CtDbContext>();
             await ctx.Database.MigrateAsync();
 
-            var env = scope.ServiceProvider.GetRequiredService<IHostEnvironment>();
-            if (env.IsDevelopment())
-                await Seeder.SeedAsync(ctx);
+            var seeder = scope.ServiceProvider.GetRequiredService<SeedService>();
+            await seeder.SeedAsync();
         }
 
         await host.RunAsync();

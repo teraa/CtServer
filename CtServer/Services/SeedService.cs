@@ -1,12 +1,50 @@
 using CtServer.Data.Models;
 
-namespace CtServer;
+namespace CtServer.Services;
 
-public static class Seeder
+public class SeedService
 {
-    public static async Task SeedAsync(CtDbContext ctx, CancellationToken cancellationToken = default)
+    private readonly IHostEnvironment _hostEnvironment;
+    private readonly CtDbContext _ctx;
+    private readonly PasswordService _passwordService;
+
+    public SeedService(
+        IHostEnvironment hostEnvironment,
+        CtDbContext ctx,
+        PasswordService passwordService)
     {
-        var seeded = await ctx.Events.AnyAsync(cancellationToken).ConfigureAwait(false);
+        _hostEnvironment = hostEnvironment;
+        _ctx = ctx;
+        _passwordService = passwordService;
+    }
+
+    public async Task SeedAsync(CancellationToken cancellationToken = default)
+    {
+        if (!_hostEnvironment.IsDevelopment())
+            return;
+
+        const string username = "admin";
+        var adminExists = await _ctx.Users.AnyAsync(x => x.Username == username, cancellationToken).ConfigureAwait(false);
+
+        if (!adminExists)
+        {
+            var password = _passwordService.Hash(username);
+
+            var user = new User
+            {
+                Username = username,
+                IsAdmin = true,
+                PasswordHash = password.hash,
+                PasswordSalt = password.salt,
+            };
+
+            _ctx.Users.Add(user);
+
+            await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        var seeded = await _ctx.Events.AnyAsync(cancellationToken).ConfigureAwait(false);
+
         if (seeded) return;
 
         var now = DateTimeOffset.Now;
@@ -94,8 +132,8 @@ public static class Seeder
             },
         };
 
-        ctx.Events.Add(evt);
+        _ctx.Events.Add(evt);
 
-        await ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 }
