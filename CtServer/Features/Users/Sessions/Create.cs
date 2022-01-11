@@ -16,7 +16,12 @@ public static class Create
         string Password
     );
 
-    public record Success(int UserId, string Token);
+    public record Success
+    (
+        int UserId,
+        string Token,
+        bool IsAdmin
+    );
 
     public class Handler : IRequestHandler<Command, OneOf<Success, Fail>>
     {
@@ -51,7 +56,7 @@ public static class Create
 
             var token = _tokenService.CreateToken(user.Id);
 
-            return new Success(user.Id, token);
+            return new Success(user.Id, token, user.IsAdmin);
         }
     }
 }
