@@ -17,7 +17,7 @@ public class AdminController : ControllerBase
     /// <summary>
     /// Export Data
     /// </summary>
-    [HttpGet(nameof(Export))]
+    [HttpGet("Data")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<Model>> Export(CancellationToken cancellationToken)
         => await _mediator.Send(new Export.Query(), cancellationToken);
@@ -28,7 +28,7 @@ public class AdminController : ControllerBase
     /// <remarks>
     /// This will overwrite current data!
     /// </remarks>
-    [HttpPost(nameof(Import))]
+    [HttpPost("Data")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Import(Import.Command command, CancellationToken cancellationToken)
     {
