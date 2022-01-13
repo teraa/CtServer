@@ -175,4 +175,16 @@ public class UsersController : ControllerBase
             (NotFound _) => NotFound()
         );
     }
+
+    /// <summary>
+    /// Get User Notifications
+    /// </summary>
+    /// <param name="id">User ID</param>
+    [HttpGet($"{{id}}/{nameof(Notifications)}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<Notifications.Index.Model>>> IndexNotifications(int id, CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(new Notifications.Index.Query(id), cancellationToken);
+        return response is null ? NotFound() : response;
+    }
 }
