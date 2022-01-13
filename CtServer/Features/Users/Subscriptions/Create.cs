@@ -35,8 +35,6 @@ public static class Create
         }
     }
 
-    public record Success(int Id);
-
     public class Handler : IRequestHandler<Command, OneOf<Success, NotFound>>
     {
         private readonly CtDbContext _ctx;
@@ -65,7 +63,7 @@ public static class Create
 
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-            return new Success(entity.Id);
+            return new Success();
         }
     }
 }

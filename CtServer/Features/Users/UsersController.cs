@@ -151,12 +151,12 @@ public class UsersController : ControllerBase
     /// </summary>
     /// <param name="id">User ID</param>
     [HttpPost($"{{id}}/{nameof(Subscriptions)}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<Subscriptions.Create.Success>> CreateSubscription(int id, Subscriptions.Create.Model model, CancellationToken cancellationToken)
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<ActionResult> CreateSubscription(int id, Subscriptions.Create.Model model, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new Subscriptions.Create.Command(id, model), cancellationToken);
         return result.Match<ActionResult>(
-            (Subscriptions.Create.Success x) => Ok(x),
+            (Success _) => NoContent(),
             (NotFound _) => NotFound()
         );
     }

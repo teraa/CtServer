@@ -6,7 +6,7 @@ public static class Index
 
     public record Model
     (
-        int Id
+        string Endpoint
     );
 
     public class Handler : IRequestHandler<Query, Model[]?>
@@ -24,7 +24,7 @@ public static class Index
                 .OrderBy(x => x.Id)
                 .Select(x => new Model
                 (
-                    x.Id
+                    x.Endpoint
                 ))
                 .ToArrayAsync(cancellationToken)
                 .ConfigureAwait(false);

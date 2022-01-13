@@ -10,7 +10,7 @@ public static class Delete
         Model Model
     ) : IRequest<OneOf<Success, NotFound>>;
 
-    public record Model(int Id);
+    public record Model(string Endpoint);
 
     public class Handler : IRequestHandler<Command, OneOf<Success, NotFound>>
     {
@@ -22,7 +22,7 @@ public static class Delete
         public async Task<OneOf<Success, NotFound>> Handle(Command request, CancellationToken cancellationToken)
         {
             var entity = await _ctx.Subscriptions
-                .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.Id == request.Model.Id, cancellationToken)
+                .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.Endpoint == request.Model.Endpoint, cancellationToken)
                 .ConfigureAwait(false);
 
             if (entity is null) return new NotFound();
