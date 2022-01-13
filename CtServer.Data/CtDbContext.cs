@@ -16,6 +16,7 @@ public class CtDbContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<UserEvent> UserEvents { get; set; }
     public DbSet<Subscription> Subscriptions { get; set; }
+    public DbSet<Notification> Notifications { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
