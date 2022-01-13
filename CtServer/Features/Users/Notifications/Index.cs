@@ -28,6 +28,7 @@ public static class Index
                 .AsNoTracking()
                 .Where(x => x.UserId == request.UserId)
                 .SelectMany(x => x.Event.Notifications)
+                .OrderByDescending(x => x.CreatedAt)
                 .Select(x => new Model
                 (
                     x.Event.Id,
