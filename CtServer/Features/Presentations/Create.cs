@@ -1,4 +1,5 @@
 using CtServer.Data.Models;
+using CtServer.Features.Notifications;
 
 namespace CtServer.Features.Presentations;
 
@@ -14,9 +15,13 @@ public static class Create
     public class Handler : IRequestHandler<Command, Response>
     {
         private readonly CtDbContext _ctx;
+        private readonly IMediator _mediator;
 
-        public Handler(CtDbContext ctx)
-            => _ctx = ctx;
+        public Handler(CtDbContext ctx, IMediator mediator)
+        {
+            _ctx = ctx;
+            _mediator = mediator;
+        }
 
         public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
         {
@@ -35,6 +40,21 @@ public static class Create
             _ctx.Presentations.Add(entity);
 
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+            var evt = await _ctx.Sections
+                .AsNoTracking()
+                .Where(x => x.Id == request.Model.SectionId)
+                .Select(x => x.Event)
+                .FirstAsync(cancellationToken)
+                .ConfigureAwait(false);
+
+            await _mediator.Publish(new Push.Notification
+            (
+                EventId: evt.Id,
+                EventTitle: evt.Title,
+                Type: NotificationType.PresentationAdded,
+                Data: new { Id = entity.Id, New = request.Model }
+            )).ConfigureAwait(false);
 
             return new(entity.Id);
         }

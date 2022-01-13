@@ -14,7 +14,9 @@ public static class Delete
         private readonly CtDbContext _ctx;
 
         public Handler(CtDbContext ctx)
-            => _ctx = ctx;
+        {
+            _ctx = ctx;
+        }
 
         public async Task<OneOf<Success, NotFound>> Handle(Command request, CancellationToken cancellationToken)
         {

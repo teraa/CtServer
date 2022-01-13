@@ -47,8 +47,13 @@ public static class Edit
 
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-            await _mediator.Publish(new Push.Notification(request.Id, request.Model.Title, NotificationType.EventEdited, new { Old = oldModel, New = request.Model }))
-                .ConfigureAwait(false);
+            await _mediator.Publish(new Push.Notification
+            (
+                EventId: entity.Id,
+                EventTitle: entity.Title,
+                Type: NotificationType.EventEdited,
+                Data: new { Id = entity.Id, Old = oldModel, New = request.Model })
+            ).ConfigureAwait(false);
 
             return new Success();
         }
