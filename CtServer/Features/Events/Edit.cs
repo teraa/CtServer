@@ -1,3 +1,5 @@
+using CtServer.Data.Models;
+using CtServer.Features.Notifications;
 using OneOf;
 
 namespace CtServer.Features.Events;
@@ -30,6 +32,14 @@ public static class Edit
 
             if (entity is null) return new NotFound();
 
+            WriteModel oldModel = new
+            (
+                entity.Title,
+                entity.Description,
+                entity.StartAt,
+                entity.EndAt
+            );
+
             entity.Title = request.Model.Title;
             entity.Description = request.Model.Description;
             entity.StartAt = request.Model.StartAt;
@@ -37,7 +47,7 @@ public static class Edit
 
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-            await _mediator.Publish(new Edited.Notification(new(request.Id)))
+            await _mediator.Publish(new Push.Notification(request.Id, request.Model.Title, NotificationType.EventEdited, new { Old = oldModel, New = request.Model }))
                 .ConfigureAwait(false);
 
             return new Success();

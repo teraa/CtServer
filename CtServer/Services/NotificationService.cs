@@ -1,3 +1,5 @@
+using System.Text.Json;
+using CtServer.Data.Models;
 using CtServer.Options;
 using Microsoft.Extensions.Options;
 using WebPush;
@@ -7,11 +9,13 @@ namespace CtServer.Services;
 public class NotificationService : IDisposable
 {
     private readonly ILogger<NotificationService> _logger;
+    private readonly JsonSerializerOptions _jsonOptions;
     private readonly WebPushClient? _client;
 
-    public NotificationService(ILogger<NotificationService> logger, IOptions<WebPushOptions> options)
+    public NotificationService(ILogger<NotificationService> logger, IOptions<WebPushOptions> options, JsonSerializerOptions jsonOptions)
     {
         _logger = logger;
+        _jsonOptions = jsonOptions;
 
         var opt = options.Value;
         if (!opt.IsEnabled) return;
@@ -58,4 +62,17 @@ public class NotificationService : IDisposable
             await SendAsync(sub, payload, cancellationToken)
                 .ConfigureAwait(false);
     }
+
+    public async Task SendAsync(IEnumerable<PushSubscription> subscriptions, Payload payload, CancellationToken cancellationToken)
+    {
+        string payloadJson = JsonSerializer.Serialize(payload, _jsonOptions);
+        await SendAsync(subscriptions, payloadJson, cancellationToken).ConfigureAwait(false);
+    }
+
+    public record Payload
+    (
+        int EventId,
+        string EventTitle,
+        NotificationType Type
+    );
 }

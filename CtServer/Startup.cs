@@ -1,4 +1,6 @@
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using CtServer.Authorization;
 using CtServer.Options;
 using CtServer.Services;
@@ -32,7 +34,8 @@ public class Startup
 
         services.AddFluentValidation(options => options.RegisterValidatorsFromAssemblyContaining(typeof(Startup)));
 
-        services.AddControllers();
+        services.AddControllers()
+            .AddJsonOptions(x => x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)));
 
         services.AddSwaggerGen(x =>
         {
@@ -114,6 +117,13 @@ public class Startup
         services.AddSingleton<TokenService>();
         services.AddSingleton<PasswordService>();
         services.AddSingleton<NotificationService>();
+        services.AddSingleton<JsonSerializerOptions>(new JsonSerializerOptions(JsonSerializerDefaults.Web)
+        {
+            Converters =
+            {
+                new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),
+            },
+        });
 
         services.AddScoped<IAuthorizationHandler, AdminAuthorizationHandler>();
 
