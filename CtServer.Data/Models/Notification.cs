@@ -16,16 +16,14 @@ public class Notification
 
 public enum NotificationType
 {
-    EventAdded,
-    EventEdited,
-    EventDeleted,
-    LocationAdded,
-    LocationEdited,
-    LocationDeleted,
-    PresentationAdded,
-    PresentationEdited,
-    PresentationDeleted,
-    SectionAdded,
-    SectionEdited,
-    SectionDeleted,
+    EventEdited = 1,
+    LocationAdded = 3,
+    LocationEdited = 4,
+    LocationDeleted = 5,
+    PresentationAdded = 6,
+    PresentationEdited = 7,
+    PresentationDeleted = 8,
+    SectionAdded = 9,
+    SectionEdited = 10,
+    SectionDeleted = 11,
 }
