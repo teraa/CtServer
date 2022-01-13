@@ -4,14 +4,6 @@ public static class Export
 {
     public record Query : IRequest<Model>;
 
-    public record Model
-    (
-        IEnumerable<Events.ReadModel> Events,
-        IEnumerable<Locations.ReadModel> Locations,
-        IEnumerable<Sections.ReadModel> Sections,
-        IEnumerable<Presentations.ReadModel> Presentations
-    );
-
     public class Handler : IRequestHandler<Query, Model>
     {
         private readonly CtDbContext _ctx;

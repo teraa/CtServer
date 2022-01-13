@@ -6,10 +6,7 @@ public static class Import
 {
     public record Command
     (
-        IEnumerable<Events.ReadModel> Events,
-        IEnumerable<Locations.ReadModel> Locations,
-        IEnumerable<Sections.ReadModel> Sections,
-        IEnumerable<Presentations.ReadModel> Presentations
+        Model Model
     ) : IRequest<Success>;
 
     public class Handler : IRequestHandler<Command, Success>
@@ -29,7 +26,7 @@ public static class Import
 
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-            var events = request.Events
+            var events = request.Model.Events
                 .Select(x => new Event
                 {
                     Id = x.Id,
@@ -39,7 +36,7 @@ public static class Import
                     EndAt = x.EndAt,
                 });
 
-            var locations = request.Locations
+            var locations = request.Model.Locations
                 .Select(x => new Location
                 {
                     Id = x.Id,
@@ -47,7 +44,7 @@ public static class Import
                     Name = x.Name,
                 });
 
-            var sections = request.Sections
+            var sections = request.Model.Sections
                 .Select(x => new Section
                 {
                     Id = x.Id,
@@ -60,7 +57,7 @@ public static class Import
                     BackgroundColor = x.BackgroundColor,
                 });
 
-            var presentations = request.Presentations
+            var presentations = request.Model.Presentations
                 .Select(x => new Presentation
                 {
                     Id = x.Id,
