@@ -25,6 +25,9 @@ public class AdminController : ControllerBase
     /// <summary>
     /// Import Data
     /// </summary>
+    /// <remarks>
+    /// This will overwrite current data!
+    /// </remarks>
     [HttpPost(nameof(Import))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Import(Import.Command command, CancellationToken cancellationToken)
