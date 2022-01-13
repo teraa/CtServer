@@ -93,7 +93,7 @@ public class UsersController : ControllerBase
     }
 
     /// <summary>
-    /// Get User Events
+    /// Get User Events (Follows)
     /// </summary>
     /// <param name="id">User ID</param>
     [HttpGet($"{{id}}/{nameof(Events)}")]
@@ -105,7 +105,7 @@ public class UsersController : ControllerBase
     }
 
     /// <summary>
-    /// Add User Event
+    /// Add User Event (Follow)
     /// </summary>
     /// <param name="id">User ID</param>
     [HttpPost($"{{id}}/{nameof(Events)}")]
@@ -120,7 +120,7 @@ public class UsersController : ControllerBase
         );
     }
     /// <summary>
-    /// Remove User Event
+    /// Remove User Event (Unfollow)
     /// </summary>
     /// <param name="id">User ID</param>
     [HttpDelete($"{{id}}/{nameof(Events)}")]
@@ -135,7 +135,7 @@ public class UsersController : ControllerBase
     }
 
     /// <summary>
-    /// Get User Subscriptions
+    /// Get User (Push) Subscriptions
     /// </summary>
     /// <param name="id">User ID</param>
     [HttpGet($"{{id}}/{nameof(Subscriptions)}")]
@@ -147,7 +147,7 @@ public class UsersController : ControllerBase
     }
 
     /// <summary>
-    /// Create User Subscription
+    /// Create User (Push) Subscription
     /// </summary>
     /// <param name="id">User ID</param>
     [HttpPost($"{{id}}/{nameof(Subscriptions)}")]
@@ -163,7 +163,7 @@ public class UsersController : ControllerBase
     }
 
     /// <summary>
-    /// Delete User Subscription
+    /// Delete User (Push) Subscription
     /// </summary>
     /// <param name="id">User ID</param>
     [HttpDelete($"{{id}}/{nameof(Subscriptions)}")]
