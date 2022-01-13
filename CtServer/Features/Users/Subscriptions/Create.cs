@@ -9,7 +9,7 @@ public static class Create
     (
         int UserId,
         Model Model
-    ) : IRequest<OneOf<Success, NotFound>>;
+    ) : IRequest<OneOf<Success, NotFound, Fail>>;
 
     public record Model
     (
@@ -35,14 +35,14 @@ public static class Create
         }
     }
 
-    public class Handler : IRequestHandler<Command, OneOf<Success, NotFound>>
+    public class Handler : IRequestHandler<Command, OneOf<Success, NotFound, Fail>>
     {
         private readonly CtDbContext _ctx;
 
         public Handler(CtDbContext ctx)
             => _ctx = ctx;
 
-        public async Task<OneOf<Success, NotFound>> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<OneOf<Success, NotFound, Fail>> Handle(Command request, CancellationToken cancellationToken)
         {
             var user = await _ctx.Users
                 .AsNoTracking()
@@ -50,6 +50,13 @@ public static class Create
                 .ConfigureAwait(false);
 
             if (user is null) return new NotFound();
+
+            bool exists = await _ctx.Subscriptions
+                .AnyAsync(x => x.Endpoint == request.Model.Endpoint, cancellationToken)
+                .ConfigureAwait(false);
+
+            if (exists)
+                return new Fail("Subscription with provided endpoint already exists.");
 
             var entity = new Subscription
             {

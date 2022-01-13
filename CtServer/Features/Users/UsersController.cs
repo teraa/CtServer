@@ -157,7 +157,8 @@ public class UsersController : ControllerBase
         var result = await _mediator.Send(new Subscriptions.Create.Command(id, model), cancellationToken);
         return result.Match<ActionResult>(
             (Success _) => NoContent(),
-            (NotFound _) => NotFound()
+            (NotFound _) => NotFound(),
+            (Fail x) => BadRequest(x)
         );
     }
 
