@@ -19,7 +19,7 @@ public class DataController : ControllerBase
     /// </summary>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<Model>> Export(CancellationToken cancellationToken)
+    public async Task<ActionResult> Export(CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new Export.Query(), cancellationToken);
 
