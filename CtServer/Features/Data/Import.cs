@@ -1,7 +1,7 @@
 using System.Text.Json;
 using CtServer.Data.Models;
 
-namespace CtServer.Features.Admin;
+namespace CtServer.Features.Data;
 
 public static class Import
 {

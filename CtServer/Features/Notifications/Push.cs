@@ -35,7 +35,7 @@ public static class Push
         {
             string dataJson = JsonSerializer.Serialize(notification.Data, _jsonOptions);
 
-            var entity = new Data.Models.Notification
+            var entity = new CtServer.Data.Models.Notification
             {
                 EventId = notification.EventId,
                 Type = notification.Type,

@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace CtServer.Features.Admin;
+namespace CtServer.Features.Data;
 
 public static class Export
 {
@@ -49,7 +49,7 @@ public static class Export
                 .ToArrayAsync(cancellationToken)
                 .ConfigureAwait(false);
 
-            var dataModel = new Admin.Model(events, locations, sections, presentations);
+            var dataModel = new Data.Model(events, locations, sections, presentations);
 
             var stream = new MemoryStream();
 

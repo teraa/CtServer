@@ -1,23 +1,23 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CtServer.Features.Admin;
+namespace CtServer.Features.Data;
 
 [ApiController]
 [Produces("application/json")]
 [Route("api/[controller]")]
 [Authorize]
-public class AdminController : ControllerBase
+public class DataController : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    public AdminController(IMediator mediator)
+    public DataController(IMediator mediator)
         => _mediator = mediator;
 
     /// <summary>
     /// Export Data
     /// </summary>
-    [HttpGet("Data")]
+    [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<Model>> Export(CancellationToken cancellationToken)
     {
@@ -35,7 +35,7 @@ public class AdminController : ControllerBase
     /// <remarks>
     /// This will overwrite current data!
     /// </remarks>
-    [HttpPost("Data")]
+    [HttpPost]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Import(IFormFile file, CancellationToken cancellationToken)
     {

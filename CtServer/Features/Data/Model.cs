@@ -1,4 +1,4 @@
-namespace CtServer.Features.Admin;
+namespace CtServer.Features.Data;
 
 public record Model
 (
