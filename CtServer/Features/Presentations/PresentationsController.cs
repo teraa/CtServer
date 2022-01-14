@@ -94,7 +94,7 @@ public class PresentationsController : ControllerBase
     {
         var result = await _mediator.Send(new Attachments.Get.Query(id), cancellationToken);
         return result.Match<ActionResult>(
-            (Attachments.Get.Success x) => PhysicalFile(Path.GetFullPath(x.FilePath), "application/octet-stream", x.FileName),
+            (Attachments.Get.Success x) => PhysicalFile(x.FilePath, "application/octet-stream", x.FileName),
             (NotFound _) => NotFound()
         );
     }

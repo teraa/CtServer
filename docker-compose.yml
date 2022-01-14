@@ -26,6 +26,9 @@ services:
       - WebPush__Subject=mailto:example@example.com
       - WebPush__PublicKey=
       - WebPush__PrivateKey=
+    volumes:
+      - ./data/attachments:/app/attachments
+
   db:
     image: postgres
     container_name: ct-db

@@ -26,7 +26,9 @@ public static class Upload
 
         public async Task<OneOf<Success, Fail>> Handle(Command request, CancellationToken cancellationToken)
         {
-            var filePath = Path.Combine(_storageOptions.AttachmentsPath, Path.GetRandomFileName());
+            string randomFileName = Path.GetRandomFileName();
+            string basePath = Path.GetFullPath(_storageOptions.AttachmentsPath);
+            string fullPath = Path.Join(basePath, randomFileName);
 
             var currentAttachment = await _ctx.Attachments
                 .FirstOrDefaultAsync(x => x.PresentationId == request.PresentationId, cancellationToken)
@@ -34,13 +36,15 @@ public static class Upload
 
             if (currentAttachment is not null)
             {
-                if (File.Exists(currentAttachment.FilePath))
-                    File.Delete(currentAttachment.FilePath);
+                string oldFullPath = Path.Join(basePath, currentAttachment.FilePath);
+
+                if (File.Exists(oldFullPath))
+                    File.Delete(oldFullPath);
 
                 _ctx.Attachments.Remove(currentAttachment);
             }
 
-            using (var stream = File.Create(filePath))
+            using (var stream = File.Create(fullPath))
             {
                 await request.File.CopyToAsync(stream);
             }
@@ -48,7 +52,7 @@ public static class Upload
             var entity = new Attachment
             {
                 PresentationId = request.PresentationId,
-                FilePath = filePath,
+                FilePath = randomFileName,
                 FileName = request.File.FileName,
             };
 
