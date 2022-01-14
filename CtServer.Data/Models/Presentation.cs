@@ -5,6 +5,7 @@ public class Presentation
 {
     public int Id { get; set; }
     public int SectionId { get; set; }
+    public int? AttachmentId { get; set; }
     public string Title { get; set; }
     public string[] Authors { get; set; }
     public string Description { get; set; }
@@ -13,4 +14,5 @@ public class Presentation
     public string? MainAuthorPhoto { get; set; }
 
     public Section Section { get; set; }
+    public Attachment? Attachment { get; set; }
 }
