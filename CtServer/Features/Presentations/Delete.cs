@@ -42,7 +42,6 @@ public static class Delete
                 entity.Description,
                 entity.Position,
                 (int)entity.Duration.TotalMinutes,
-                entity.Attachment,
                 entity.MainAuthorPhoto
             );
 

@@ -12,7 +12,6 @@ public record ReadModel
     string Description,
     int Position,
     int DurationMinutes,
-    string? Attachment,
     string? MainAuthorPhoto
 )
 {
@@ -26,7 +25,6 @@ public record ReadModel
             x.Description,
             x.Position,
             (int)x.Duration.TotalMinutes,
-            x.Attachment,
             x.MainAuthorPhoto
         );
 }
@@ -39,7 +37,6 @@ public record WriteModel
     string Description,
     int Position,
     int DurationMinutes,
-    string? Attachment,
     string? MainAuthorPhoto
 );
 

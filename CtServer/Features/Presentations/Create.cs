@@ -33,7 +33,6 @@ public static class Create
                 Description = request.Model.Description,
                 Position = request.Model.Position,
                 Duration = TimeSpan.FromMinutes(request.Model.DurationMinutes),
-                Attachment = request.Model.Attachment,
                 MainAuthorPhoto = request.Model.MainAuthorPhoto,
             };
 

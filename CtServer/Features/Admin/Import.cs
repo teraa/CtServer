@@ -67,7 +67,6 @@ public static class Import
                     Description = x.Description,
                     Position = x.Position,
                     Duration = TimeSpan.FromMinutes(x.DurationMinutes),
-                    Attachment = x.Attachment,
                     MainAuthorPhoto = x.MainAuthorPhoto,
                 });
 

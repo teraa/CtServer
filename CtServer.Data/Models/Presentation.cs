@@ -10,7 +10,6 @@ public class Presentation
     public string Description { get; set; }
     public int Position { get; set; }
     public TimeSpan Duration { get; set; }
-    public string? Attachment { get; set; }
     public string? MainAuthorPhoto { get; set; }
 
     public Section Section { get; set; }

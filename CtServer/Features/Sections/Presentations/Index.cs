@@ -12,7 +12,6 @@ public static class Index
         string Description,
         int Position,
         int DurationMinutes,
-        string? Attachment,
         string? MainAuthorPhoto
     );
 
@@ -36,7 +35,6 @@ public static class Index
                     x.Description,
                     x.Position,
                     (int)x.Duration.TotalMinutes,
-                    x.Attachment,
                     x.MainAuthorPhoto
                 ))
                 .ToArrayAsync(cancellationToken)
