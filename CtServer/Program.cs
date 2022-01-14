@@ -8,6 +8,7 @@ using CtServer.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -61,6 +62,7 @@ builder.Services
     .AddSingleton<TokenService>()
     .AddSingleton<PasswordService>()
     .AddSingleton<NotificationService>()
+    .AddSingleton<FileExtensionContentTypeProvider>()
     .AddSingleton<JsonSerializerOptions>(new JsonSerializerOptions(JsonSerializerDefaults.Web)
     {
         Converters =

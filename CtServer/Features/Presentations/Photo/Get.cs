@@ -1,4 +1,5 @@
 using CtServer.Options;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Options;
 using OneOf;
 
@@ -19,30 +20,38 @@ public static class Get
     {
         private readonly CtDbContext _ctx;
         private readonly StorageOptions _storageOptions;
+        private readonly FileExtensionContentTypeProvider _contentTypeProvider;
 
-        public Handler(CtDbContext ctx, IOptions<StorageOptions> storageOptions)
+        public Handler(
+            CtDbContext ctx,
+            IOptions<StorageOptions> storageOptions,
+            FileExtensionContentTypeProvider contentTypeProvider)
         {
             _ctx = ctx;
             _storageOptions = storageOptions.Value;
+            _contentTypeProvider = contentTypeProvider;
         }
 
         public async Task<OneOf<Success, NotFound>> Handle(Query request, CancellationToken cancellationToken)
         {
             string basePath = Path.GetFullPath(_storageOptions.PhotosPath);
 
-            var model = await _ctx.Photos
+            var entity = await _ctx.Photos
                 .AsNoTracking()
-                .Where(x => x.PresentationId == request.PresentationId)
-                .Select(x => new Success
-                (
-                    Path.Join(basePath, x.FilePath),
-                    x.FileName,
-                    "application/octet-stream"
-                ))
-                .FirstOrDefaultAsync(cancellationToken)
+                .FirstOrDefaultAsync(x => x.PresentationId == request.PresentationId, cancellationToken)
                 .ConfigureAwait(false);
 
-            if (model is null) return new NotFound();
+            if (entity is null) return new NotFound();
+
+            if (!_contentTypeProvider.TryGetContentType(entity.FileName, out string? contentType))
+                contentType = "application/octet-stream";
+
+            var model = new Success
+            (
+                FilePath: Path.Join(basePath, entity.FilePath),
+                FileName: entity.FileName,
+                ContentType: contentType
+            );
 
             return model;
         }
