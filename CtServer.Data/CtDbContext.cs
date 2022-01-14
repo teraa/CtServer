@@ -18,6 +18,7 @@ public class CtDbContext : DbContext
     public DbSet<Subscription> Subscriptions { get; set; }
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<Attachment> Attachments { get; set; }
+    public DbSet<Photo> Photos { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
