@@ -20,7 +20,14 @@ public class AdminController : ControllerBase
     [HttpGet("Data")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<Model>> Export(CancellationToken cancellationToken)
-        => await _mediator.Send(new Export.Query(), cancellationToken);
+    {
+        var result = await _mediator.Send(new Export.Query(), cancellationToken);
+
+        return new FileStreamResult(result.Stream, result.ContentType)
+        {
+            FileDownloadName = "export.json",
+        };
+    }
 
     /// <summary>
     /// Import Data
@@ -30,9 +37,9 @@ public class AdminController : ControllerBase
     /// </remarks>
     [HttpPost("Data")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<ActionResult> Import(Import.Command command, CancellationToken cancellationToken)
+    public async Task<ActionResult> Import(IFormFile file, CancellationToken cancellationToken)
     {
-        await _mediator.Send(command, cancellationToken);
+        await _mediator.Send(new Import.Command(file), cancellationToken);
         return NoContent();
     }
 }

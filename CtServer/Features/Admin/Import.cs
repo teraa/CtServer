@@ -1,3 +1,4 @@
+using System.Text.Json;
 using CtServer.Data.Models;
 
 namespace CtServer.Features.Admin;
@@ -6,27 +7,31 @@ public static class Import
 {
     public record Command
     (
-        Model Model
+        IFormFile File
     ) : IRequest<Success>;
 
     public class Handler : IRequestHandler<Command, Success>
     {
         private readonly CtDbContext _ctx;
+        private readonly JsonSerializerOptions _jsonOptions;
 
-        public Handler(CtDbContext ctx)
-            => _ctx = ctx;
+        public Handler(CtDbContext ctx, JsonSerializerOptions jsonOptions)
+        {
+            _ctx = ctx;
+            _jsonOptions = jsonOptions;
+        }
 
         public async Task<Success> Handle(Command request, CancellationToken cancellationToken)
         {
-            var oldEvents = await _ctx.Events
-                .ToArrayAsync(cancellationToken)
-                .ConfigureAwait(false);
+            Model data;
 
-            _ctx.Events.RemoveRange(oldEvents);
+            using (var stream = request.File.OpenReadStream())
+            {
+                data = await JsonSerializer.DeserializeAsync<Model>(stream, _jsonOptions, cancellationToken)
+                    .ConfigureAwait(false) ?? null!;
+            }
 
-            await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-
-            var events = request.Model.Events
+            var events = data.Events
                 .Select(x => new Event
                 {
                     Id = x.Id,
@@ -36,7 +41,7 @@ public static class Import
                     EndAt = x.EndAt,
                 });
 
-            var locations = request.Model.Locations
+            var locations = data.Locations
                 .Select(x => new Location
                 {
                     Id = x.Id,
@@ -44,7 +49,7 @@ public static class Import
                     Name = x.Name,
                 });
 
-            var sections = request.Model.Sections
+            var sections = data.Sections
                 .Select(x => new Section
                 {
                     Id = x.Id,
@@ -57,7 +62,7 @@ public static class Import
                     BackgroundColor = x.BackgroundColor,
                 });
 
-            var presentations = request.Model.Presentations
+            var presentations = data.Presentations
                 .Select(x => new Presentation
                 {
                     Id = x.Id,
@@ -68,6 +73,14 @@ public static class Import
                     Position = x.Position,
                     Duration = TimeSpan.FromMinutes(x.DurationMinutes),
                 });
+
+            var oldEvents = await _ctx.Events
+                .ToArrayAsync(cancellationToken)
+                .ConfigureAwait(false);
+
+            _ctx.Events.RemoveRange(oldEvents);
+
+            await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             _ctx.Events.AddRange(events);
             _ctx.Locations.AddRange(locations);
