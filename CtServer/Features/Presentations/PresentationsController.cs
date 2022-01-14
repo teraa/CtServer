@@ -94,7 +94,7 @@ public class PresentationsController : ControllerBase
     {
         var result = await _mediator.Send(new Attachments.Get.Query(id), cancellationToken);
         return result.Match<ActionResult>(
-            (Attachments.Get.Success x) => PhysicalFile(x.FilePath, "application/octet-stream", x.FileName),
+            (Attachments.Get.Success x) => PhysicalFile(x.FilePath, x.ContentType, x.FileName),
             (NotFound _) => NotFound()
         );
     }
@@ -136,7 +136,7 @@ public class PresentationsController : ControllerBase
     {
         var result = await _mediator.Send(new Photos.Get.Query(id), cancellationToken);
         return result.Match<ActionResult>(
-            (Photos.Get.Success x) => PhysicalFile(x.FilePath, "application/octet-stream", x.FileName),
+            (Photos.Get.Success x) => PhysicalFile(x.FilePath, x.ContentType, x.FileName),
             (NotFound _) => NotFound()
         );
     }

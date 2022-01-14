@@ -11,7 +11,8 @@ public static class Get
     public record Success
     (
         string FilePath,
-        string FileName
+        string FileName,
+        string ContentType
     );
 
     public class Handler : IRequestHandler<Query, OneOf<Success, NotFound>>
@@ -35,7 +36,8 @@ public static class Get
                 .Select(x => new Success
                 (
                     Path.Join(basePath, x.FilePath),
-                    x.FileName
+                    x.FileName,
+                    "application/octet-stream"
                 ))
                 .FirstOrDefaultAsync(cancellationToken)
                 .ConfigureAwait(false);
