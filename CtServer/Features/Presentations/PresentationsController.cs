@@ -1,3 +1,4 @@
+using System.Net.Mime;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -136,7 +137,18 @@ public class PresentationsController : ControllerBase
     {
         var result = await _mediator.Send(new Photos.Get.Query(id), cancellationToken);
         return result.Match<ActionResult>(
-            (Photos.Get.Success x) => PhysicalFile(x.FilePath, x.ContentType, x.FileName),
+            (Photos.Get.Success x) =>
+            {
+                ContentDisposition contentDisposition = new()
+                {
+                    FileName = x.FileName,
+                    Inline = true,
+                };
+                Response.Headers.Add("Content-Disposition", contentDisposition.ToString());
+                Response.Headers.Add("X-Content-Type-Options", "nosniff");
+
+                return PhysicalFile(x.FilePath, x.ContentType, x.FileName);
+            },
             (NotFound _) => NotFound()
         );
     }
