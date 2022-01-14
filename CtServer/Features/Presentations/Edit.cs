@@ -42,8 +42,7 @@ public static class Edit
                 entity.Authors,
                 entity.Description,
                 entity.Position,
-                (int)entity.Duration.TotalMinutes,
-                entity.MainAuthorPhoto
+                (int)entity.Duration.TotalMinutes
             );
 
             entity.SectionId = request.Model.SectionId;
@@ -52,7 +51,6 @@ public static class Edit
             entity.Description = request.Model.Description;
             entity.Position = request.Model.Position;
             entity.Duration = TimeSpan.FromMinutes(request.Model.DurationMinutes);
-            entity.MainAuthorPhoto = request.Model.MainAuthorPhoto;
 
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 

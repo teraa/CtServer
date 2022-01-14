@@ -12,7 +12,6 @@ public record ReadModel
     string Description,
     int Position,
     int DurationMinutes,
-    string? MainAuthorPhoto,
     string? AttachmentFileName
 )
 {
@@ -26,7 +25,6 @@ public record ReadModel
             x.Description,
             x.Position,
             (int)x.Duration.TotalMinutes,
-            x.MainAuthorPhoto,
             x.Attachment == null ? null : x.Attachment.FileName
         );
 }
@@ -38,8 +36,7 @@ public record WriteModel
     string[] Authors,
     string Description,
     int Position,
-    int DurationMinutes,
-    string? MainAuthorPhoto
+    int DurationMinutes
 );
 
 public class WriteModelValidator : AbstractValidator<WriteModel>

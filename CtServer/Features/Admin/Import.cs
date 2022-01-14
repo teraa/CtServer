@@ -67,7 +67,6 @@ public static class Import
                     Description = x.Description,
                     Position = x.Position,
                     Duration = TimeSpan.FromMinutes(x.DurationMinutes),
-                    MainAuthorPhoto = x.MainAuthorPhoto,
                 });
 
             _ctx.Events.AddRange(events);

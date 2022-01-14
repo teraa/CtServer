@@ -41,8 +41,7 @@ public static class Delete
                 entity.Authors,
                 entity.Description,
                 entity.Position,
-                (int)entity.Duration.TotalMinutes,
-                entity.MainAuthorPhoto
+                (int)entity.Duration.TotalMinutes
             );
 
             _ctx.Presentations.Remove(entity);

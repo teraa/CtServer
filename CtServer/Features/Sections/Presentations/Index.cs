@@ -11,8 +11,7 @@ public static class Index
         string[] Authors,
         string Description,
         int Position,
-        int DurationMinutes,
-        string? MainAuthorPhoto
+        int DurationMinutes
     );
 
     public class Handler : IRequestHandler<Query, Model[]?>
@@ -34,8 +33,7 @@ public static class Index
                     x.Authors,
                     x.Description,
                     x.Position,
-                    (int)x.Duration.TotalMinutes,
-                    x.MainAuthorPhoto
+                    (int)x.Duration.TotalMinutes
                 ))
                 .ToArrayAsync(cancellationToken)
                 .ConfigureAwait(false);

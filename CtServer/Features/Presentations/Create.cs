@@ -32,8 +32,7 @@ public static class Create
                 Authors = request.Model.Authors,
                 Description = request.Model.Description,
                 Position = request.Model.Position,
-                Duration = TimeSpan.FromMinutes(request.Model.DurationMinutes),
-                MainAuthorPhoto = request.Model.MainAuthorPhoto,
+                Duration = TimeSpan.FromMinutes(request.Model.DurationMinutes)
             };
 
             _ctx.Presentations.Add(entity);
