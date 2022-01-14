@@ -70,4 +70,46 @@ public class PresentationsController : ControllerBase
             (NotFound _) => NotFound()
         );
     }
+
+    /// <summary>
+    /// Upload Presentation Attachment (File Upload)
+    /// </summary>
+    [HttpPost($"{{id}}/{nameof(Attachments)}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<ActionResult> UploadAttachment(int id, IFormFile attachment, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new Attachments.Upload.Command(id, attachment), cancellationToken);
+        return result.Match<ActionResult>(
+            (Success _) => NoContent(),
+            (Fail x) => BadRequest(x)
+        );
+    }
+
+    /// <summary>
+    /// Get Presentation Attachment (File Download)
+    /// </summary>
+    [HttpGet($"{{id}}/{nameof(Attachments)}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult> GetAttachment(int id, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new Attachments.Get.Query(id), cancellationToken);
+        return result.Match<ActionResult>(
+            (Attachments.Get.Success x) => PhysicalFile(Path.GetFullPath(x.FilePath), "application/octet-stream", x.FileName),
+            (NotFound _) => NotFound()
+        );
+    }
+
+    /// <summary>
+    /// Delete Presentation Attachment
+    /// </summary>
+    [HttpDelete($"{{id}}/{nameof(Attachments)}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<ActionResult> DeleteAttachment(int id, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new Attachments.Delete.Command(id), cancellationToken);
+        return result.Match<ActionResult>(
+            (Success _) => NoContent(),
+            (NotFound _) => NotFound()
+        );
+    }
 }

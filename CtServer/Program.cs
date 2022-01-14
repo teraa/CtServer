@@ -55,6 +55,7 @@ builder.Services.AddAuthentication(x =>
 builder.Services
     .AddOptionsWithSection<JwtOptions>(builder.Configuration)
     .AddOptionsWithSection<WebPushOptions>(builder.Configuration)
+    .AddOptionsWithSection<StorageOptions>(builder.Configuration)
     .AddScoped<SeedService>()
     .AddScoped<IAuthorizationHandler, AdminAuthorizationHandler>()
     .AddSingleton<TokenService>()
