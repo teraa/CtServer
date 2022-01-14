@@ -18,6 +18,7 @@ services:
     # - DB_STRING=Host=host.docker.internal;Port=5055;Database=ct;Username=postgres;Password=example;Include Error Detail=true
       - Jwt__Secret=placeholder - replace in prod#32
       - Storage__AttachmentsPath=attachments
+      - Storage__PhotosPath=photos
 
       # https://console.firebase.google.com/
       - WebPush__IsEnabled=false

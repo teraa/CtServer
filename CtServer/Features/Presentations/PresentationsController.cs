@@ -112,4 +112,46 @@ public class PresentationsController : ControllerBase
             (NotFound _) => NotFound()
         );
     }
+
+    /// <summary>
+    /// Upload Presentation Photo (File Upload)
+    /// </summary>
+    [HttpPost($"{{id}}/{nameof(Photos)}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<ActionResult> UploadPhoto(int id, IFormFile Photo, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new Photos.Upload.Command(id, Photo), cancellationToken);
+        return result.Match<ActionResult>(
+            (Success _) => NoContent(),
+            (Fail x) => BadRequest(x)
+        );
+    }
+
+    /// <summary>
+    /// Get Presentation Photo (File Download)
+    /// </summary>
+    [HttpGet($"{{id}}/{nameof(Photos)}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult> GetPhoto(int id, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new Photos.Get.Query(id), cancellationToken);
+        return result.Match<ActionResult>(
+            (Photos.Get.Success x) => PhysicalFile(x.FilePath, "application/octet-stream", x.FileName),
+            (NotFound _) => NotFound()
+        );
+    }
+
+    /// <summary>
+    /// Delete Presentation Photo
+    /// </summary>
+    [HttpDelete($"{{id}}/{nameof(Photos)}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<ActionResult> DeletePhoto(int id, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new Photos.Delete.Command(id), cancellationToken);
+        return result.Match<ActionResult>(
+            (Success _) => NoContent(),
+            (NotFound _) => NotFound()
+        );
+    }
 }
