@@ -32,8 +32,6 @@ public static class Create
         string Token
     );
 
-    public record Fail(IEnumerable<string> Errors);
-
     public class Handler : IRequestHandler<Command, OneOf<Success, Fail>>
     {
         private readonly CtDbContext _ctx;
@@ -62,7 +60,7 @@ public static class Create
                 .ConfigureAwait(false);
 
             if (exists)
-                return new Fail(new[] { "User already exists." });
+                return new Fail("User already exists.");
 
             var password = _passwordService.Hash(request.Model.Password);
 

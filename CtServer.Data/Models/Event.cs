@@ -13,4 +13,5 @@ public class Event
     public ICollection<Location> Locations { get; set; }
     public ICollection<UserEvent> UserEvents { get; set; }
     public ICollection<User> Users { get; set; }
+    public ICollection<Notification> Notifications { get; set; }
 }

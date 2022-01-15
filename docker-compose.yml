@@ -16,7 +16,19 @@ services:
       - Logging__Console__FormatterName
       - DB_STRING=Host=db;Port=5432;Database=ct;Username=postgres;Password=example;Include Error Detail=true
     # - DB_STRING=Host=host.docker.internal;Port=5055;Database=ct;Username=postgres;Password=example;Include Error Detail=true
-      - JWT_SECRET=placeholder - replace in prod#32
+      - Jwt__Secret=placeholder - replace in prod#32
+      - Storage__AttachmentsPath=attachments
+      - Storage__PhotosPath=photos
+
+      # https://console.firebase.google.com/
+      - WebPush__IsEnabled=false
+      - WebPush__ServerKey=
+      - WebPush__SenderId=
+      - WebPush__Subject=mailto:example@example.com
+      - WebPush__PublicKey=
+      - WebPush__PrivateKey=
+    volumes:
+      - ./data/attachments:/app/attachments
 
   db:
     image: postgres

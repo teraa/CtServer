@@ -1,13 +1,18 @@
-namespace CtServer.Features.Events;
+namespace CtServer.Features.Events.Sections;
 
-public static class GetLocations
+public static class Index
 {
     public record Query(int EventId) : IRequest<Model[]?>;
 
     public record Model
     (
         int Id,
-        string Name
+        int LocationId,
+        string Title,
+        string[] Chairs,
+        DateTimeOffset StartAt,
+        DateTimeOffset EndAt,
+        int BackgroundColor
     );
 
     public class Handler : IRequestHandler<Query, Model[]?>
@@ -19,14 +24,19 @@ public static class GetLocations
 
         public async Task<Model[]?> Handle(Query request, CancellationToken cancellationToken)
         {
-            var models = await _ctx.Locations
+            var models = await _ctx.Sections
                 .AsNoTracking()
                 .Where(x => x.EventId == request.EventId)
                 .OrderBy(x => x.Id)
                 .Select(x => new Model
                 (
                     x.Id,
-                    x.Name
+                    x.LocationId,
+                    x.Title,
+                    x.Chairs,
+                    x.StartAt,
+                    x.EndAt,
+                    x.BackgroundColor
                 ))
                 .ToArrayAsync(cancellationToken)
                 .ConfigureAwait(false);

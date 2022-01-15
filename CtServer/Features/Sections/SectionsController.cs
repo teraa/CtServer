@@ -18,7 +18,7 @@ public class SectionsController : ControllerBase
     /// Get All Sections
     /// </summary>
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Index.Model>>> Index(CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<ReadModel>>> Index(CancellationToken cancellationToken)
         => await _mediator.Send(new Index.Query(), cancellationToken);
 
     /// <summary>
@@ -26,7 +26,7 @@ public class SectionsController : ControllerBase
     /// </summary>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<ActionResult<Create.Response>> Create(Create.Model model, CancellationToken cancellationToken)
+    public async Task<ActionResult<Create.Response>> Create(WriteModel model, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new Create.Command(model), cancellationToken);
         return CreatedAtAction(actionName: nameof(Get), routeValues: new { id = response.Id }, value: response);
@@ -37,7 +37,7 @@ public class SectionsController : ControllerBase
     /// </summary>
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<Get.Model>> Get(int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<ReadModel>> Get(int id, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new Get.Query(id), cancellationToken);
         return response is null ? NotFound() : response;
@@ -48,10 +48,13 @@ public class SectionsController : ControllerBase
     /// </summary>
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<ActionResult> Edit(int id, Edit.Model model, CancellationToken cancellationToken)
+    public async Task<ActionResult> Edit(int id, WriteModel model, CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(new Edit.Command(id, model), cancellationToken);
-        return response is null ? NotFound() : NoContent();
+        var result = await _mediator.Send(new Edit.Command(id, model), cancellationToken);
+        return result.Match<ActionResult>(
+            (Success _) => NoContent(),
+            (NotFound _) => NotFound()
+        );
     }
 
     /// <summary>
@@ -61,18 +64,22 @@ public class SectionsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Delete(int id, CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(new Delete.Command(id), cancellationToken);
-        return response is null ? NotFound() : NoContent();
+        var result = await _mediator.Send(new Delete.Command(id), cancellationToken);
+        return result.Match<ActionResult>(
+            (Success _) => NoContent(),
+            (NotFound _) => NotFound()
+        );
     }
 
     /// <summary>
     /// Get Section Presentations
     /// </summary>
+    /// <param name="id">Section ID</param>
     [HttpGet($"{{id}}/{nameof(Presentations)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<GetPresentations.Model>>> GetPresentations(int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<Presentations.Index.Model>>> IndexPresentations(int id, CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(new GetPresentations.Query(id), cancellationToken);
+        var response = await _mediator.Send(new Presentations.Index.Query(id), cancellationToken);
         return response is null ? NotFound() : response;
     }
 }

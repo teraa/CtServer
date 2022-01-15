@@ -1,4 +1,5 @@
 using CtServer.Data.Models;
+using CtServer.Features.Notifications;
 
 namespace CtServer.Features.Sections;
 
@@ -6,41 +7,21 @@ public static class Create
 {
     public record Command
     (
-        Model Model
+        WriteModel Model
     ) : IRequest<Response>;
-
-    public record Model
-    (
-        int EventId,
-        int LocationId,
-        string Title,
-        string[] Chairs,
-        DateTimeOffset StartAt,
-        DateTimeOffset EndAt,
-        int BackgroundColor
-    );
-
-    public class ModelValidator : AbstractValidator<Model>
-    {
-        public ModelValidator()
-        {
-            RuleFor(x => x.EventId).GreaterThan(0);
-            RuleFor(x => x.LocationId).GreaterThan(0);
-            RuleFor(x => x.Title).NotEmpty();
-            RuleFor(x => x.Chairs).NotEmpty().ForEach(x => x.NotEmpty());
-            RuleFor(x => x.StartAt).NotEmpty();
-            RuleFor(x => x.EndAt).NotEmpty();
-        }
-    }
 
     public record Response(int Id);
 
     public class Handler : IRequestHandler<Command, Response>
     {
         private readonly CtDbContext _ctx;
+        private readonly IMediator _mediator;
 
-        public Handler(CtDbContext ctx)
-            => _ctx = ctx;
+        public Handler(CtDbContext ctx, IMediator mediator)
+        {
+            _ctx = ctx;
+            _mediator = mediator;
+        }
 
         public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
         {
@@ -58,6 +39,19 @@ public static class Create
             _ctx.Sections.Add(entity);
 
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+            var evt = await _ctx.Events
+                .AsNoTracking()
+                .FirstAsync(x => x.Id == request.Model.EventId, cancellationToken)
+                .ConfigureAwait(false);
+
+            await _mediator.Publish(new Push.Notification
+            (
+                EventId: evt.Id,
+                EventTitle: evt.Title,
+                Type: NotificationType.SectionAdded,
+                Data: new { Id = entity.Id, New = request.Model }
+            )).ConfigureAwait(false);
 
             return new(entity.Id);
         }

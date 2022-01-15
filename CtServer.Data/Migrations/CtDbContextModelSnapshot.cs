@@ -22,6 +22,43 @@ namespace CtServer.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("CtServer.Data.Models.Attachment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("file_name");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("file_path");
+
+                    b.Property<int>("PresentationId")
+                        .HasColumnType("integer")
+                        .HasColumnName("presentation_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_attachments");
+
+                    b.HasIndex("FilePath")
+                        .IsUnique()
+                        .HasDatabaseName("ix_attachments_file_path");
+
+                    b.HasIndex("PresentationId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_attachments_presentation_id");
+
+                    b.ToTable("attachments", (string)null);
+                });
+
             modelBuilder.Entity("CtServer.Data.Models.Event", b =>
                 {
                     b.Property<int>("Id")
@@ -82,6 +119,78 @@ namespace CtServer.Data.Migrations
                     b.ToTable("locations", (string)null);
                 });
 
+            modelBuilder.Entity("CtServer.Data.Models.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Data")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("data");
+
+                    b.Property<int>("EventId")
+                        .HasColumnType("integer")
+                        .HasColumnName("event_id");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer")
+                        .HasColumnName("type");
+
+                    b.HasKey("Id")
+                        .HasName("pk_notifications");
+
+                    b.HasIndex("EventId")
+                        .HasDatabaseName("ix_notifications_event_id");
+
+                    b.ToTable("notifications", (string)null);
+                });
+
+            modelBuilder.Entity("CtServer.Data.Models.Photo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("file_name");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("file_path");
+
+                    b.Property<int>("PresentationId")
+                        .HasColumnType("integer")
+                        .HasColumnName("presentation_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_photos");
+
+                    b.HasIndex("FilePath")
+                        .IsUnique()
+                        .HasDatabaseName("ix_photos_file_path");
+
+                    b.HasIndex("PresentationId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_photos_presentation_id");
+
+                    b.ToTable("photos", (string)null);
+                });
+
             modelBuilder.Entity("CtServer.Data.Models.Presentation", b =>
                 {
                     b.Property<int>("Id")
@@ -91,9 +200,9 @@ namespace CtServer.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Attachment")
-                        .HasColumnType("text")
-                        .HasColumnName("attachment");
+                    b.Property<int?>("AttachmentId")
+                        .HasColumnType("integer")
+                        .HasColumnName("attachment_id");
 
                     b.Property<string[]>("Authors")
                         .IsRequired()
@@ -109,9 +218,9 @@ namespace CtServer.Data.Migrations
                         .HasColumnType("interval")
                         .HasColumnName("duration");
 
-                    b.Property<string>("MainAuthorPhoto")
-                        .HasColumnType("text")
-                        .HasColumnName("main_author_photo");
+                    b.Property<int?>("PhotoId")
+                        .HasColumnType("integer")
+                        .HasColumnName("photo_id");
 
                     b.Property<int>("Position")
                         .HasColumnType("integer")
@@ -186,6 +295,47 @@ namespace CtServer.Data.Migrations
                     b.ToTable("sections", (string)null);
                 });
 
+            modelBuilder.Entity("CtServer.Data.Models.Subscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Auth")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("auth");
+
+                    b.Property<string>("Endpoint")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("endpoint");
+
+                    b.Property<string>("P256dh")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("p256dh");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_subscriptions");
+
+                    b.HasIndex("Endpoint")
+                        .IsUnique()
+                        .HasDatabaseName("ix_subscriptions_endpoint");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_subscriptions_user_id");
+
+                    b.ToTable("subscriptions", (string)null);
+                });
+
             modelBuilder.Entity("CtServer.Data.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -194,6 +344,10 @@ namespace CtServer.Data.Migrations
                         .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_admin");
 
                     b.Property<byte[]>("PasswordHash")
                         .IsRequired()
@@ -235,6 +389,18 @@ namespace CtServer.Data.Migrations
                     b.ToTable("user_events", (string)null);
                 });
 
+            modelBuilder.Entity("CtServer.Data.Models.Attachment", b =>
+                {
+                    b.HasOne("CtServer.Data.Models.Presentation", "Presentation")
+                        .WithOne("Attachment")
+                        .HasForeignKey("CtServer.Data.Models.Attachment", "PresentationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_attachments_presentations_presentation_id1");
+
+                    b.Navigation("Presentation");
+                });
+
             modelBuilder.Entity("CtServer.Data.Models.Location", b =>
                 {
                     b.HasOne("CtServer.Data.Models.Event", "Event")
@@ -245,6 +411,30 @@ namespace CtServer.Data.Migrations
                         .HasConstraintName("fk_locations_events_event_id");
 
                     b.Navigation("Event");
+                });
+
+            modelBuilder.Entity("CtServer.Data.Models.Notification", b =>
+                {
+                    b.HasOne("CtServer.Data.Models.Event", "Event")
+                        .WithMany("Notifications")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_notifications_events_event_id");
+
+                    b.Navigation("Event");
+                });
+
+            modelBuilder.Entity("CtServer.Data.Models.Photo", b =>
+                {
+                    b.HasOne("CtServer.Data.Models.Presentation", "Presentation")
+                        .WithOne("Photo")
+                        .HasForeignKey("CtServer.Data.Models.Photo", "PresentationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_photos_presentations_presentation_id1");
+
+                    b.Navigation("Presentation");
                 });
 
             modelBuilder.Entity("CtServer.Data.Models.Presentation", b =>
@@ -280,6 +470,18 @@ namespace CtServer.Data.Migrations
                     b.Navigation("Location");
                 });
 
+            modelBuilder.Entity("CtServer.Data.Models.Subscription", b =>
+                {
+                    b.HasOne("CtServer.Data.Models.User", "User")
+                        .WithMany("Subscriptions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_subscriptions_users_user_id");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("CtServer.Data.Models.UserEvent", b =>
                 {
                     b.HasOne("CtServer.Data.Models.Event", "Event")
@@ -305,6 +507,8 @@ namespace CtServer.Data.Migrations
                 {
                     b.Navigation("Locations");
 
+                    b.Navigation("Notifications");
+
                     b.Navigation("Sections");
 
                     b.Navigation("UserEvents");
@@ -315,6 +519,13 @@ namespace CtServer.Data.Migrations
                     b.Navigation("Sections");
                 });
 
+            modelBuilder.Entity("CtServer.Data.Models.Presentation", b =>
+                {
+                    b.Navigation("Attachment");
+
+                    b.Navigation("Photo");
+                });
+
             modelBuilder.Entity("CtServer.Data.Models.Section", b =>
                 {
                     b.Navigation("Presentations");
@@ -322,6 +533,8 @@ namespace CtServer.Data.Migrations
 
             modelBuilder.Entity("CtServer.Data.Models.User", b =>
                 {
+                    b.Navigation("Subscriptions");
+
                     b.Navigation("UserEvents");
                 });
 #pragma warning restore 612, 618

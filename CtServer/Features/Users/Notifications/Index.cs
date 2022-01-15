@@ -1,16 +1,18 @@
-namespace CtServer.Features.Users;
+using CtServer.Data.Models;
 
-public static class GetEvents
+namespace CtServer.Features.Users.Notifications;
+
+public static class Index
 {
     public record Query(int UserId) : IRequest<Model[]?>;
 
     public record Model
     (
-        int Id,
-        string Title,
-        string Description,
-        DateTimeOffset StartAt,
-        DateTimeOffset EndAt
+        int EventId,
+        string EventTitle,
+        DateTimeOffset CreatedAt,
+        NotificationType Type,
+        object Data
     );
 
     public class Handler : IRequestHandler<Query, Model[]?>
@@ -22,18 +24,18 @@ public static class GetEvents
 
         public async Task<Model[]?> Handle(Query request, CancellationToken cancellationToken)
         {
-            var models = await _ctx.Users
+            var models = await _ctx.UserEvents
                 .AsNoTracking()
-                .Where(x => x.Id == request.UserId)
-                .SelectMany(x => x.Events)
-                .OrderBy(x => x.Id)
+                .Where(x => x.UserId == request.UserId)
+                .SelectMany(x => x.Event.Notifications)
+                .OrderByDescending(x => x.CreatedAt)
                 .Select(x => new Model
                 (
-                    x.Id,
-                    x.Title,
-                    x.Description,
-                    x.StartAt,
-                    x.EndAt
+                    x.Event.Id,
+                    x.Event.Title,
+                    x.CreatedAt,
+                    x.Type,
+                    x.Data
                 ))
                 .ToArrayAsync(cancellationToken)
                 .ConfigureAwait(false);

@@ -1,5 +1,8 @@
 {
     "version": "2.0.0",
+    "presentation": {
+        "reveal": "silent",
+    },
     "tasks": [
         {
             "label": "build",
@@ -11,7 +14,10 @@
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
-            "problemMatcher": "$msCompile"
+            "problemMatcher": "$msCompile",
+            "presentation": {
+                "reveal": "silent",
+            }
         },
         {
             "label": "publish",

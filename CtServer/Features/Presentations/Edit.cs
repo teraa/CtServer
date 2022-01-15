@@ -1,3 +1,7 @@
+using CtServer.Data.Models;
+using CtServer.Features.Notifications;
+using OneOf;
+
 namespace CtServer.Features.Presentations;
 
 public static class Edit
@@ -5,52 +9,41 @@ public static class Edit
     public record Command
     (
         int Id,
-        Model Model
-    ) : IRequest<Response?>;
+        WriteModel Model
+    ) : IRequest<OneOf<Success, NotFound>>;
 
-    public record Model
-    (
-        int SectionId,
-        string Title,
-        string[] Authors,
-        string Description,
-        int Position,
-        int DurationMinutes,
-        string? Attachment,
-        string? MainAuthorPhoto
-    );
-
-    public class ModelValidator : AbstractValidator<Model>
-    {
-        public ModelValidator()
-        {
-            RuleFor(x => x.SectionId).GreaterThan(0);
-            RuleFor(x => x.Title).NotEmpty();
-            RuleFor(x => x.Authors).NotEmpty().ForEach(x => x.NotEmpty());
-            RuleFor(x => x.Description).NotEmpty();
-            RuleFor(x => x.Position).GreaterThan(0);
-            RuleFor(x => x.DurationMinutes).GreaterThan(0);
-        }
-    }
-
-    public record Response;
-
-    public class Handler : IRequestHandler<Command, Response?>
+    public class Handler : IRequestHandler<Command, OneOf<Success, NotFound>>
     {
         private readonly CtDbContext _ctx;
+        private readonly IMediator _mediator;
 
-        public Handler(CtDbContext ctx)
-            => _ctx = ctx;
+        public Handler(CtDbContext ctx, IMediator mediator)
+        {
+            _ctx = ctx;
+            _mediator = mediator;
+        }
 
-        public async Task<Response?> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<OneOf<Success, NotFound>> Handle(Command request, CancellationToken cancellationToken)
         {
             var entity = await _ctx.Presentations
                 .AsQueryable()
+                .Include(x => x.Section)
+                .ThenInclude(x => x.Event)
                 .Where(x => x.Id == request.Id)
                 .FirstOrDefaultAsync(cancellationToken)
                 .ConfigureAwait(false);
 
-            if (entity is null) return null;
+            if (entity is null) return new NotFound();
+
+            WriteModel oldModel = new
+            (
+                entity.SectionId,
+                entity.Title,
+                entity.Authors,
+                entity.Description,
+                entity.Position,
+                (int)entity.Duration.TotalMinutes
+            );
 
             entity.SectionId = request.Model.SectionId;
             entity.Title = request.Model.Title;
@@ -58,12 +51,18 @@ public static class Edit
             entity.Description = request.Model.Description;
             entity.Position = request.Model.Position;
             entity.Duration = TimeSpan.FromMinutes(request.Model.DurationMinutes);
-            entity.Attachment = request.Model.Attachment;
-            entity.MainAuthorPhoto = request.Model.MainAuthorPhoto;
 
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-            return new();
+            await _mediator.Publish(new Push.Notification
+            (
+                EventId: entity.Section.Event.Id,
+                EventTitle: entity.Section.Event.Title,
+                Type: NotificationType.PresentationEdited,
+                Data: new { Id = entity.Id, Old = oldModel, New = request.Model }
+            )).ConfigureAwait(false);
+
+            return new Success();
         }
     }
 }

@@ -1,9 +1,9 @@
 using CtServer.Services;
 using OneOf;
 
-namespace CtServer.Features.Users;
+namespace CtServer.Features.Users.Sessions;
 
-public static class CreateSession
+public static class Create
 {
     public record Command
     (
@@ -16,8 +16,12 @@ public static class CreateSession
         string Password
     );
 
-    public record Success(string Token);
-    public record Fail(IEnumerable<string> Errors);
+    public record Success
+    (
+        int UserId,
+        string Token,
+        bool IsAdmin
+    );
 
     public class Handler : IRequestHandler<Command, OneOf<Success, Fail>>
     {
@@ -48,11 +52,11 @@ public static class CreateSession
                 .ConfigureAwait(false);
 
             if (user is null || !_passwordService.Test(request.Model.Password, user.PasswordHash, user.PasswordSalt))
-                return new Fail(new[] { "Invalid username and/or password." });
+                return new Fail("Invalid username and/or password.");
 
             var token = _tokenService.CreateToken(user.Id);
 
-            return new Success(token);
+            return new Success(user.Id, token, user.IsAdmin);
         }
     }
 }

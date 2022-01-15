@@ -1,3 +1,7 @@
+using CtServer.Data.Models;
+using CtServer.Features.Notifications;
+using OneOf;
+
 namespace CtServer.Features.Events;
 
 public static class Edit
@@ -5,45 +9,36 @@ public static class Edit
     public record Command
     (
         int Id,
-        Model Model
-    ) : IRequest<Response?>;
+        WriteModel Model
+    ) : IRequest<OneOf<Success, NotFound>>;
 
-    public record Model
-    (
-        string Title,
-        string Description,
-        DateTimeOffset StartAt,
-        DateTimeOffset EndAt
-    );
-
-    public class ModelValidator : AbstractValidator<Model>
-    {
-        public ModelValidator()
-        {
-            RuleFor(x => x.Title).NotEmpty();
-            RuleFor(x => x.Description).NotNull();
-            RuleFor(x => x.StartAt).NotEmpty();
-            RuleFor(x => x.EndAt).NotEmpty();
-        }
-    }
-
-    public record Response;
-
-    public class Handler : IRequestHandler<Command, Response?>
+    public class Handler : IRequestHandler<Command, OneOf<Success, NotFound>>
     {
         private readonly CtDbContext _ctx;
+        private readonly IMediator _mediator;
 
-        public Handler(CtDbContext ctx)
-            => _ctx = ctx;
+        public Handler(CtDbContext ctx, IMediator mediator)
+        {
+            _ctx = ctx;
+            _mediator = mediator;
+        }
 
-        public async Task<Response?> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<OneOf<Success, NotFound>> Handle(Command request, CancellationToken cancellationToken)
         {
             var entity = await _ctx.Events
                 .AsQueryable()
                 .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken)
                 .ConfigureAwait(false);
 
-            if (entity is null) return null;
+            if (entity is null) return new NotFound();
+
+            WriteModel oldModel = new
+            (
+                entity.Title,
+                entity.Description,
+                entity.StartAt,
+                entity.EndAt
+            );
 
             entity.Title = request.Model.Title;
             entity.Description = request.Model.Description;
@@ -52,7 +47,15 @@ public static class Edit
 
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-            return new();
+            await _mediator.Publish(new Push.Notification
+            (
+                EventId: entity.Id,
+                EventTitle: entity.Title,
+                Type: NotificationType.EventEdited,
+                Data: new { Id = entity.Id, Old = oldModel, New = request.Model })
+            ).ConfigureAwait(false);
+
+            return new Success();
         }
     }
 }

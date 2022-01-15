@@ -15,6 +15,10 @@ public class CtDbContext : DbContext
     public DbSet<Location> Locations { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<UserEvent> UserEvents { get; set; }
+    public DbSet<Subscription> Subscriptions { get; set; }
+    public DbSet<Notification> Notifications { get; set; }
+    public DbSet<Attachment> Attachments { get; set; }
+    public DbSet<Photo> Photos { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

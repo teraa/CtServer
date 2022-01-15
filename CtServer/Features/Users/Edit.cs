@@ -1,3 +1,5 @@
+using OneOf;
+
 namespace CtServer.Features.Users;
 
 public static class Edit
@@ -6,7 +8,7 @@ public static class Edit
     (
         int Id,
         Model Model
-    ) : IRequest<Response?>;
+    ) : IRequest<OneOf<Success, NotFound>>;
 
     public record Model(string Username);
 
@@ -18,29 +20,27 @@ public static class Edit
         }
     }
 
-    public record Response;
-
-    public class Handler : IRequestHandler<Command, Response?>
+    public class Handler : IRequestHandler<Command, OneOf<Success, NotFound>>
     {
         private readonly CtDbContext _ctx;
 
         public Handler(CtDbContext ctx)
             => _ctx = ctx;
 
-        public async Task<Response?> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<OneOf<Success, NotFound>> Handle(Command request, CancellationToken cancellationToken)
         {
             var entity = await _ctx.Users
                 .AsQueryable()
                 .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken)
                 .ConfigureAwait(false);
 
-            if (entity is null) return null;
+            if (entity is null) return new NotFound();
 
             entity.Username = request.Model.Username;
 
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-            return new();
+            return new Success();
         }
     }
 }

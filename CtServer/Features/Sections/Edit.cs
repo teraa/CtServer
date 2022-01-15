@@ -1,3 +1,7 @@
+using CtServer.Data.Models;
+using CtServer.Features.Notifications;
+using OneOf;
+
 namespace CtServer.Features.Sections;
 
 public static class Edit
@@ -5,51 +9,41 @@ public static class Edit
     public record Command
     (
         int Id,
-        Model Model
-    ) : IRequest<Response?>;
+        WriteModel Model
+    ) : IRequest<OneOf<Success, NotFound>>;
 
-    public record Model
-    (
-        int EventId,
-        int LocationId,
-        string Title,
-        string[] Chairs,
-        DateTimeOffset StartAt,
-        DateTimeOffset EndAt,
-        int BackgroundColor
-    );
-
-    public class ModelValidator : AbstractValidator<Model>
-    {
-        public ModelValidator()
-        {
-            RuleFor(x => x.EventId).GreaterThan(0);
-            RuleFor(x => x.LocationId).GreaterThan(0);
-            RuleFor(x => x.Title).NotEmpty();
-            RuleFor(x => x.Chairs).NotEmpty().ForEach(x => x.NotEmpty());
-            RuleFor(x => x.StartAt).NotEmpty();
-            RuleFor(x => x.EndAt).NotEmpty();
-        }
-    }
-
-    public record Response;
-
-    public class Handler : IRequestHandler<Command, Response?>
+    public class Handler : IRequestHandler<Command, OneOf<Success, NotFound>>
     {
         private readonly CtDbContext _ctx;
+        private readonly IMediator _mediator;
 
-        public Handler(CtDbContext ctx)
-            => _ctx = ctx;
+        public Handler(CtDbContext ctx, IMediator mediator)
+        {
+            _ctx = ctx;
+            _mediator = mediator;
+        }
 
-        public async Task<Response?> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<OneOf<Success, NotFound>> Handle(Command request, CancellationToken cancellationToken)
         {
             var entity = await _ctx.Sections
                 .AsQueryable()
+                .Include(x => x.Event)
                 .Where(x => x.Id == request.Id)
                 .FirstOrDefaultAsync(cancellationToken)
                 .ConfigureAwait(false);
 
-            if (entity is null) return null;
+            if (entity is null) return new NotFound();
+
+            WriteModel oldModel = new
+            (
+                entity.EventId,
+                entity.LocationId,
+                entity.Title,
+                entity.Chairs,
+                entity.StartAt,
+                entity.EndAt,
+                entity.BackgroundColor
+            );
 
             entity.EventId = request.Model.EventId;
             entity.LocationId = request.Model.LocationId;
@@ -61,7 +55,15 @@ public static class Edit
 
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-            return new();
+            await _mediator.Publish(new Push.Notification
+            (
+                EventId: entity.Event.Id,
+                EventTitle: entity.Event.Title,
+                Type: NotificationType.SectionEdited,
+                Data: new { Id = entity.Id, Old = oldModel, New = request.Model }
+            )).ConfigureAwait(false);
+
+            return new Success();
         }
     }
 }

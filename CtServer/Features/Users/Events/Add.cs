@@ -1,9 +1,9 @@
 using CtServer.Data.Models;
 using OneOf;
 
-namespace CtServer.Features.Users;
+namespace CtServer.Features.Users.Events;
 
-public static class AddEvent
+public static class Add
 {
     public record Command
     (
@@ -12,10 +12,6 @@ public static class AddEvent
     ) : IRequest<OneOf<Success, NotFound, Fail>>;
 
     public record Model(int Id);
-
-    public record Success;
-    public record Fail(string Error);
-    public record NotFound;
 
     public class Handler : IRequestHandler<Command, OneOf<Success, NotFound, Fail>>
     {
