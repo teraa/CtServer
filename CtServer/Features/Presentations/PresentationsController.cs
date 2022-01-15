@@ -91,6 +91,7 @@ public class PresentationsController : ControllerBase
     /// </summary>
     [HttpGet($"{{id}}/{nameof(Attachments)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [AllowAnonymous]
     public async Task<ActionResult> GetAttachment(int id, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new Attachments.Get.Query(id), cancellationToken);
@@ -133,6 +134,7 @@ public class PresentationsController : ControllerBase
     /// </summary>
     [HttpGet($"{{id}}/{nameof(Photos)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [AllowAnonymous]
     public async Task<ActionResult> GetPhoto(int id, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new Photos.Get.Query(id), cancellationToken);
