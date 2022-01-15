@@ -6,7 +6,6 @@ namespace CtServer.Features.Sections;
 [ApiController]
 [Produces("application/json")]
 [Route("api/[controller]")]
-// [Authorize]
 public class SectionsController : ControllerBase
 {
     private readonly IMediator _mediator;

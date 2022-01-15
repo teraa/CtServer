@@ -6,7 +6,6 @@ namespace CtServer.Features.Locations;
 [ApiController]
 [Produces("application/json")]
 [Route("api/[controller]")]
-// [Authorize]
 public class LocationsController : ControllerBase
 {
     private readonly IMediator _mediator;
