@@ -21,11 +21,7 @@ public class DataController : ControllerBase
     public async Task<ActionResult> Export(CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new Export.Query(), cancellationToken);
-
-        return new FileStreamResult(result.Stream, result.ContentType)
-        {
-            FileDownloadName = "export.json",
-        };
+        return File(result.Stream, result.ContentType, "export.json");
     }
 
     /// <summary>

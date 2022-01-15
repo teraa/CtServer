@@ -12,7 +12,8 @@ public record ReadModel
     string Description,
     int Position,
     int DurationMinutes,
-    string? AttachmentFileName
+    string? AttachmentFileName,
+    bool HasPhoto
 )
 {
     public static Expression<Func<Presentation, ReadModel>> FromEntity
@@ -25,7 +26,8 @@ public record ReadModel
             x.Description,
             x.Position,
             (int)x.Duration.TotalMinutes,
-            x.Attachment == null ? null : x.Attachment.FileName
+            x.Attachment == null ? null : x.Attachment.FileName,
+            x.Photo != null
         );
 }
 
