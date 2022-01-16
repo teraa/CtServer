@@ -30,7 +30,15 @@ public static class Send
 
             if (evt is null) return new NotFound();
 
-            await _mediator.Publish(new Push.Notification(evt.Id, evt.Title, NotificationType.CustomMessage, request.Message))
+            var data = new
+            {
+                New = new
+                {
+                    Message = request.Message,
+                },
+            };
+
+            await _mediator.Publish(new Push.Notification(evt.Id, evt.Title, NotificationType.CustomMessage, data))
                 .ConfigureAwait(false);
 
             return new Success();
