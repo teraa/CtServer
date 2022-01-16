@@ -38,6 +38,6 @@ public class WriteModelValidator : AbstractValidator<WriteModel>
         RuleFor(x => x.Title).NotEmpty();
         RuleFor(x => x.Description).NotNull();
         RuleFor(x => x.StartAt).NotEmpty();
-        RuleFor(x => x.EndAt).NotEmpty();
+        RuleFor(x => x.EndAt).NotEmpty().GreaterThan(x => x.StartAt);
     }
 }
