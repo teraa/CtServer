@@ -98,7 +98,7 @@ public class UsersController : ControllerBase
     /// <param name="id">User ID</param>
     [HttpGet($"{{id}}/{nameof(Events)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<Events.Index.Model>>> IndexEvents(int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<Features.Events.ReadModel>>> IndexEvents(int id, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new Events.Index.Query(id), cancellationToken);
         return response is null ? NotFound() : response;

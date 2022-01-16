@@ -77,7 +77,7 @@ public class EventsController : ControllerBase
     /// <param name="id">Event ID</param>
     [HttpGet($"{{id}}/{nameof(Sections)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<Sections.Index.Model>>> IndexSections(int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<Features.Sections.ReadModel>>> IndexSections(int id, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new Sections.Index.Query(id), cancellationToken);
         return response is null ? NotFound() : response;
@@ -89,7 +89,7 @@ public class EventsController : ControllerBase
     /// <param name="id">Event ID</param>
     [HttpGet($"{{id}}/{nameof(Locations)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<Locations.Index.Model>>> IndexLocations(int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<Features.Locations.ReadModel>>> IndexLocations(int id, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new Locations.Index.Query(id), cancellationToken);
         return response is null ? NotFound() : response;
@@ -101,7 +101,7 @@ public class EventsController : ControllerBase
     /// <param name="id">Event ID</param>
     [HttpGet($"{{id}}/{nameof(Users)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<Users.Index.Model>>> IndexUsers(int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<Features.Users.ReadModel>>> IndexUsers(int id, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new Users.Index.Query(id), cancellationToken);
         return response is null ? NotFound() : response;

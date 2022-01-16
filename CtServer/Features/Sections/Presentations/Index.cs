@@ -1,20 +1,10 @@
+using Model = CtServer.Features.Presentations.ReadModel;
+
 namespace CtServer.Features.Sections.Presentations;
 
 public static class Index
 {
     public record Query(int SectionId) : IRequest<Model[]?>;
-
-    public record Model
-    (
-        int Id,
-        string Title,
-        string[] Authors,
-        string Description,
-        int Position,
-        int DurationMinutes,
-        string? AttachmentFileName,
-        bool HasPhoto
-    );
 
     public class Handler : IRequestHandler<Query, Model[]?>
     {
@@ -28,17 +18,7 @@ public static class Index
             var models = await _ctx.Presentations
                 .AsNoTracking()
                 .OrderBy(x => x.Id)
-                .Select(x => new Model
-                (
-                    x.Id,
-                    x.Title,
-                    x.Authors,
-                    x.Description,
-                    x.Position,
-                    (int)x.Duration.TotalMinutes,
-                    x.Attachment == null ? null : x.Attachment.FileName,
-                    x.Photo != null
-                ))
+                .Select(Model.FromEntity)
                 .ToArrayAsync(cancellationToken)
                 .ConfigureAwait(false);
 

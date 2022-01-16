@@ -1,14 +1,10 @@
+using Model = CtServer.Features.Locations.ReadModel;
+
 namespace CtServer.Features.Events.Locations;
 
 public static class Index
 {
     public record Query(int EventId) : IRequest<Model[]?>;
-
-    public record Model
-    (
-        int Id,
-        string Name
-    );
 
     public class Handler : IRequestHandler<Query, Model[]?>
     {
@@ -23,11 +19,7 @@ public static class Index
                 .AsNoTracking()
                 .Where(x => x.EventId == request.EventId)
                 .OrderBy(x => x.Id)
-                .Select(x => new Model
-                (
-                    x.Id,
-                    x.Name
-                ))
+                .Select(Model.FromEntity)
                 .ToArrayAsync(cancellationToken)
                 .ConfigureAwait(false);
 
