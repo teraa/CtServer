@@ -26,4 +26,5 @@ public enum NotificationType
     SectionAdded = 9,
     SectionEdited = 10,
     SectionDeleted = 11,
+    CustomMessage = 12,
 }
