@@ -11,7 +11,9 @@ public static class Index
         string[] Authors,
         string Description,
         int Position,
-        int DurationMinutes
+        int DurationMinutes,
+        string? AttachmentFileName,
+        bool HasPhoto
     );
 
     public class Handler : IRequestHandler<Query, Model[]?>
@@ -33,7 +35,9 @@ public static class Index
                     x.Authors,
                     x.Description,
                     x.Position,
-                    (int)x.Duration.TotalMinutes
+                    (int)x.Duration.TotalMinutes,
+                    x.Attachment == null ? null : x.Attachment.FileName,
+                    x.Photo != null
                 ))
                 .ToArrayAsync(cancellationToken)
                 .ConfigureAwait(false);
