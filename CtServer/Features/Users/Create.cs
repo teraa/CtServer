@@ -71,7 +71,7 @@ public static class Create
                 PasswordSalt = password.salt,
             };
 
-            _ctx.Add(user);
+            _ctx.Users.Add(user);
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             var token = _tokenService.CreateToken(user.Id);

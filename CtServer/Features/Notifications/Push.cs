@@ -43,7 +43,7 @@ public static class Push
                 CreatedAt = DateTimeOffset.UtcNow,
             };
 
-            _ctx.Add(entity);
+            _ctx.Notifications.Add(entity);
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             var subscriptions = await _ctx.UserEvents
