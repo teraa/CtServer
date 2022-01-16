@@ -50,5 +50,8 @@ public class WriteModelValidator : AbstractValidator<WriteModel>
         RuleFor(x => x.Chairs).NotEmpty().ForEach(x => x.NotEmpty());
         RuleFor(x => x.StartAt).NotEmpty();
         RuleFor(x => x.EndAt).NotEmpty();
+        RuleFor(x => x.BackgroundColor)
+            .GreaterThanOrEqualTo(0)
+            .LessThanOrEqualTo(0xFFFFFF);
     }
 }
