@@ -47,7 +47,8 @@ public class WriteModelValidator : AbstractValidator<WriteModel>
     {
         RuleFor(x => x.SectionId).GreaterThan(0);
         RuleFor(x => x.Title).NotEmpty();
-        RuleFor(x => x.Authors).NotEmpty().ForEach(x => x.NotEmpty());
+        RuleFor(x => x.Authors).NotEmpty()
+            .ForEach(x => x.NotEmpty());
         RuleFor(x => x.Description).NotEmpty();
         RuleFor(x => x.Position).GreaterThan(0);
         RuleFor(x => x.DurationMinutes).GreaterThan(0);

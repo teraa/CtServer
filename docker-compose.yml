@@ -29,6 +29,7 @@ services:
       - WebPush__PrivateKey=
     volumes:
       - ./data/attachments:/app/attachments
+      - ./data/photos:/app/photos
 
   db:
     image: postgres

@@ -1,17 +1,10 @@
+using Model = CtServer.Features.Events.ReadModel;
+
 namespace CtServer.Features.Users.Events;
 
 public static class Index
 {
     public record Query(int UserId) : IRequest<Model[]?>;
-
-    public record Model
-    (
-        int Id,
-        string Title,
-        string Description,
-        DateTimeOffset StartAt,
-        DateTimeOffset EndAt
-    );
 
     public class Handler : IRequestHandler<Query, Model[]?>
     {
@@ -27,14 +20,7 @@ public static class Index
                 .Where(x => x.Id == request.UserId)
                 .SelectMany(x => x.Events)
                 .OrderBy(x => x.Id)
-                .Select(x => new Model
-                (
-                    x.Id,
-                    x.Title,
-                    x.Description,
-                    x.StartAt,
-                    x.EndAt
-                ))
+                .Select(Model.FromEntity)
                 .ToArrayAsync(cancellationToken)
                 .ConfigureAwait(false);
 
