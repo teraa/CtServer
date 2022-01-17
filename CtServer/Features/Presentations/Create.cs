@@ -1,5 +1,6 @@
 using CtServer.Data.Models;
 using CtServer.Features.Notifications;
+using OneOf;
 
 namespace CtServer.Features.Presentations;
 
@@ -8,11 +9,11 @@ public static class Create
     public record Command
     (
         WriteModel Model
-    ) : IRequest<Response>;
+    ) : IRequest<OneOf<Success, Fail>>;
 
-    public record Response(int Id);
+    public record Success(int Id);
 
-    public class Handler : IRequestHandler<Command, Response>
+    public class Handler : IRequestHandler<Command, OneOf<Success, Fail>>
     {
         private readonly CtDbContext _ctx;
         private readonly IMediator _mediator;
@@ -23,8 +24,18 @@ public static class Create
             _mediator = mediator;
         }
 
-        public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<OneOf<Success, Fail>> Handle(Command request, CancellationToken cancellationToken)
         {
+            var section = await _ctx.Sections
+                .AsNoTracking()
+                .Include(x => x.Event)
+                .Where(x => x.Id == request.Model.SectionId)
+                .FirstOrDefaultAsync(cancellationToken)
+                .ConfigureAwait(false);
+
+            if (section is null)
+                return new Fail("Invalid section ID.");
+
             var entity = new Presentation
             {
                 SectionId = request.Model.SectionId,
@@ -39,22 +50,15 @@ public static class Create
 
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-            var evt = await _ctx.Sections
-                .AsNoTracking()
-                .Where(x => x.Id == request.Model.SectionId)
-                .Select(x => x.Event)
-                .FirstAsync(cancellationToken)
-                .ConfigureAwait(false);
-
             await _mediator.Publish(new Push.Notification
             (
-                EventId: evt.Id,
-                EventTitle: evt.Title,
+                EventId: section.Event.Id,
+                EventTitle: section.Event.Title,
                 Type: NotificationType.PresentationAdded,
                 Data: new { Id = entity.Id, New = request.Model }
             )).ConfigureAwait(false);
 
-            return new(entity.Id);
+            return new Success(entity.Id);
         }
     }
 }
