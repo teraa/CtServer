@@ -10,9 +10,9 @@ public static class Edit
     (
         int Id,
         WriteModel Model
-    ) : IRequest<OneOf<Success, NotFound>>;
+    ) : IRequest<OneOf<Success, NotFound, Fail>>;
 
-    public class Handler : IRequestHandler<Command, OneOf<Success, NotFound>>
+    public class Handler : IRequestHandler<Command, OneOf<Success, NotFound, Fail>>
     {
         private readonly CtDbContext _ctx;
         private readonly IMediator _mediator;
@@ -23,7 +23,7 @@ public static class Edit
             _mediator = mediator;
         }
 
-        public async Task<OneOf<Success, NotFound>> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<OneOf<Success, NotFound, Fail>> Handle(Command request, CancellationToken cancellationToken)
         {
             var entity = await _ctx.Sections
                 .AsQueryable()
@@ -33,6 +33,14 @@ public static class Edit
                 .ConfigureAwait(false);
 
             if (entity is null) return new NotFound();
+
+            var evt = entity.Event;
+
+            if (request.Model.StartAt < evt.StartAt || request.Model.StartAt > evt.EndAt ||
+                request.Model.EndAt < evt.StartAt || request.Model.EndAt > evt.EndAt)
+            {
+                return new Fail("Start and end times must be within event start and end times.");
+            }
 
             WriteModel oldModel = new
             (

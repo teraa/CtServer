@@ -56,7 +56,8 @@ public class SectionsController : ControllerBase
         var result = await _mediator.Send(new Edit.Command(id, model), cancellationToken);
         return result.Match<ActionResult>(
             (Success _) => NoContent(),
-            (NotFound _) => NotFound()
+            (NotFound _) => NotFound(),
+            (Fail x) => BadRequest(x)
         );
     }
 
