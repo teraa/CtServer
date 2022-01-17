@@ -17,6 +17,7 @@ public static class Index
         {
             var models = await _ctx.Presentations
                 .AsNoTracking()
+                .Where(x => x.SectionId == request.SectionId)
                 .OrderBy(x => x.Id)
                 .Select(Model.FromEntity)
                 .ToArrayAsync(cancellationToken)
