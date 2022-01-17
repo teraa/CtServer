@@ -32,22 +32,14 @@ public static class Edit
 
             if (entity is null) return new NotFound();
 
-            WriteModel oldModel = new
-            (
-                entity.Title,
-                entity.Description,
-                entity.StartAt,
-                entity.EndAt
-            );
+            ModelChanges changes = new();
 
-            bool updated = false;
+            changes.Set(nameof(entity.Title), entity.Title, request.Model.Title, x => entity.Title = x);
+            changes.Set(nameof(entity.Description), entity.Description, request.Model.Description, x => entity.Description = x);
+            changes.Set(nameof(entity.StartAt), entity.StartAt, request.Model.StartAt, x => entity.StartAt = x);
+            changes.Set(nameof(entity.EndAt), entity.EndAt, request.Model.EndAt, x => entity.EndAt = x);
 
-            updated |= Extensions.TryUpdate(entity.Title, request.Model.Title, x => entity.Title = x);
-            updated |= Extensions.TryUpdate(entity.Description, request.Model.Description, x => entity.Description = x);
-            updated |= Extensions.TryUpdate(entity.StartAt, request.Model.StartAt, x => entity.StartAt = x);
-            updated |= Extensions.TryUpdate(entity.EndAt, request.Model.EndAt, x => entity.EndAt = x);
-
-            if (!updated) return new Success();
+            if (!changes.Map.Any()) return new Success();
 
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
@@ -56,7 +48,7 @@ public static class Edit
                 EventId: entity.Id,
                 EventTitle: entity.Title,
                 Type: NotificationType.EventEdited,
-                Data: new { Id = entity.Id, Old = oldModel, New = request.Model })
+                Data: new { Id = entity.Id, Changes = changes.Map })
             ).ConfigureAwait(false);
 
             return new Success();

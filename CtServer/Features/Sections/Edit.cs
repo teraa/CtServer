@@ -42,28 +42,17 @@ public static class Edit
                 return new Fail("Start and end times must be within event start and end times.");
             }
 
-            WriteModel oldModel = new
-            (
-                entity.EventId,
-                entity.LocationId,
-                entity.Title,
-                entity.Chairs,
-                entity.StartAt,
-                entity.EndAt,
-                entity.BackgroundColor
-            );
+            ModelChanges changes = new();
 
-            bool updated = false;
+            changes.Set(nameof(entity.EventId), entity.EventId, request.Model.EventId, x => entity.EventId = x);
+            changes.Set(nameof(entity.LocationId), entity.LocationId, request.Model.LocationId, x => entity.LocationId = x);
+            changes.Set(nameof(entity.Title), entity.Title, request.Model.Title, x => entity.Title = x);
+            changes.Set(nameof(entity.Chairs), entity.Chairs, request.Model.Chairs, x => entity.Chairs = x);
+            changes.Set(nameof(entity.StartAt), entity.StartAt, request.Model.StartAt, x => entity.StartAt = x);
+            changes.Set(nameof(entity.EndAt), entity.EndAt, request.Model.EndAt, x => entity.EndAt = x);
+            changes.Set(nameof(entity.BackgroundColor), entity.BackgroundColor, request.Model.BackgroundColor, x => entity.BackgroundColor = x);
 
-            updated |= Extensions.TryUpdate(entity.EventId, request.Model.EventId, x => entity.EventId = x);
-            updated |= Extensions.TryUpdate(entity.LocationId, request.Model.LocationId, x => entity.LocationId = x);
-            updated |= Extensions.TryUpdate(entity.Title, request.Model.Title, x => entity.Title = x);
-            updated |= Extensions.TryUpdate(entity.Chairs, request.Model.Chairs, x => entity.Chairs = x);
-            updated |= Extensions.TryUpdate(entity.StartAt, request.Model.StartAt, x => entity.StartAt = x);
-            updated |= Extensions.TryUpdate(entity.EndAt, request.Model.EndAt, x => entity.EndAt = x);
-            updated |= Extensions.TryUpdate(entity.BackgroundColor, request.Model.BackgroundColor, x => entity.BackgroundColor = x);
-
-            if (!updated) return new Success();
+            if (!changes.Map.Any()) return new Success();
 
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
@@ -72,7 +61,7 @@ public static class Edit
                 EventId: entity.Event.Id,
                 EventTitle: entity.Event.Title,
                 Type: NotificationType.SectionEdited,
-                Data: new { Id = entity.Id, Old = oldModel, New = request.Model }
+                Data: new { Id = entity.Id, Changes = changes.Map }
             )).ConfigureAwait(false);
 
             return new Success();

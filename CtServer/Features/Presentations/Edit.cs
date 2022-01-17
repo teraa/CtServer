@@ -35,26 +35,16 @@ public static class Edit
 
             if (entity is null) return new NotFound();
 
-            WriteModel oldModel = new
-            (
-                entity.SectionId,
-                entity.Title,
-                entity.Authors,
-                entity.Description,
-                entity.Position,
-                (int)entity.Duration.TotalMinutes
-            );
+            ModelChanges changes = new();
 
-            bool updated = false;
+            changes.Set(nameof(entity.SectionId), entity.SectionId, request.Model.SectionId, x => entity.SectionId = x);
+            changes.Set(nameof(entity.Title), entity.Title, request.Model.Title, x => entity.Title = x);
+            changes.Set(nameof(entity.Authors), entity.Authors, request.Model.Authors, x => entity.Authors = x);
+            changes.Set(nameof(entity.Description), entity.Description, request.Model.Description, x => entity.Description = x);
+            changes.Set(nameof(entity.Position), entity.Position, request.Model.Position, x => entity.Position = x);
+            changes.Set(nameof(entity.Duration), entity.Duration, TimeSpan.FromMinutes(request.Model.DurationMinutes), x => entity.Duration = x);
 
-            updated |= Extensions.TryUpdate(entity.SectionId, request.Model.SectionId, x => entity.SectionId = x);
-            updated |= Extensions.TryUpdate(entity.Title, request.Model.Title, x => entity.Title = x);
-            updated |= Extensions.TryUpdate(entity.Authors, request.Model.Authors, x => entity.Authors = x);
-            updated |= Extensions.TryUpdate(entity.Description, request.Model.Description, x => entity.Description = x);
-            updated |= Extensions.TryUpdate(entity.Position, request.Model.Position, x => entity.Position = x);
-            updated |= Extensions.TryUpdate(entity.Duration, TimeSpan.FromMinutes(request.Model.DurationMinutes), x => entity.Duration = x);
-
-            if (!updated) return new Success();
+            if (!changes.Map.Any()) return new Success();
 
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
@@ -63,7 +53,7 @@ public static class Edit
                 EventId: entity.Section.Event.Id,
                 EventTitle: entity.Section.Event.Title,
                 Type: NotificationType.PresentationEdited,
-                Data: new { Id = entity.Id, Old = oldModel, New = request.Model }
+                Data: new { Id = entity.Id, Changes = changes.Map }
             )).ConfigureAwait(false);
 
             return new Success();

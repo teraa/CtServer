@@ -33,18 +33,12 @@ public static class Edit
 
             if (entity is null) return new NotFound();
 
-            WriteModel oldModel = new
-            (
-                entity.EventId,
-                entity.Name
-            );
+            ModelChanges changes = new();
 
-            bool updated = false;
+            changes.Set(nameof(entity.EventId), entity.EventId, request.Model.EventId, x => entity.EventId = x);
+            changes.Set(nameof(entity.Name), entity.Name, request.Model.Name, x => entity.Name = x);
 
-            updated |= Extensions.TryUpdate(entity.EventId, request.Model.EventId, x => entity.EventId = x);
-            updated |= Extensions.TryUpdate(entity.Name, request.Model.Name, x => entity.Name = x);
-
-            if (!updated) return new Success();
+            if (!changes.Map.Any()) return new Success();
 
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
@@ -53,7 +47,7 @@ public static class Edit
                 EventId: entity.Event.Id,
                 EventTitle: entity.Event.Title,
                 Type: NotificationType.LocationEdited,
-                Data: new { Id = entity.Id, Old = oldModel, New = request.Model }
+                Data: new { Id = entity.Id, Changes = changes.Map }
             )).ConfigureAwait(false);
 
             return new Success();
