@@ -26,10 +26,13 @@ public class SectionsController : ControllerBase
     /// </summary>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<ActionResult<Create.Response>> Create(WriteModel model, CancellationToken cancellationToken)
+    public async Task<ActionResult<Create.Success>> Create(WriteModel model, CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(new Create.Command(model), cancellationToken);
-        return CreatedAtAction(actionName: nameof(Get), routeValues: new { id = response.Id }, value: response);
+        var result = await _mediator.Send(new Create.Command(model), cancellationToken);
+        return result.Match<ActionResult>(
+            (Create.Success x) => CreatedAtAction(actionName: nameof(Get), routeValues: new { id = x.Id }, value: x),
+            (Fail x) => BadRequest(x)
+        );
     }
 
     /// <summary>
