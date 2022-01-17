@@ -25,6 +25,7 @@ public class SectionsController : ControllerBase
     /// Create Section
     /// </summary>
     [HttpPost]
+    [Authorize("Admin")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<ActionResult<Create.Success>> Create(WriteModel model, CancellationToken cancellationToken)
     {
@@ -50,6 +51,7 @@ public class SectionsController : ControllerBase
     /// Edit Section
     /// </summary>
     [HttpPut("{id}")]
+    [Authorize("Admin")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Edit(int id, WriteModel model, CancellationToken cancellationToken)
     {
@@ -65,6 +67,7 @@ public class SectionsController : ControllerBase
     /// Delete Section
     /// </summary>
     [HttpDelete("{id}")]
+    [Authorize("Admin")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Delete(int id, CancellationToken cancellationToken)
     {

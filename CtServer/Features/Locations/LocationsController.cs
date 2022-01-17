@@ -25,6 +25,7 @@ public class LocationsController : ControllerBase
     /// Create Location
     /// </summary>
     [HttpPost]
+    [Authorize("Admin")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<ActionResult<Create.Success>> Create(WriteModel model, CancellationToken cancellationToken)
     {
@@ -50,6 +51,7 @@ public class LocationsController : ControllerBase
     /// Edit Location
     /// </summary>
     [HttpPut("{id}")]
+    [Authorize("Admin")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Edit(int id, WriteModel model, CancellationToken cancellationToken)
     {
@@ -64,6 +66,7 @@ public class LocationsController : ControllerBase
     /// Delete Location
     /// </summary>
     [HttpDelete("{id}")]
+    [Authorize("Admin")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Delete(int id, CancellationToken cancellationToken)
     {

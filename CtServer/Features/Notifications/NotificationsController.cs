@@ -6,7 +6,7 @@ namespace CtServer.Features.Notifications;
 [ApiController]
 [Produces("application/json")]
 [Route("api/[controller]")]
-[Authorize]
+[Authorize("Admin")]
 public class NotificationsController : ControllerBase
 {
     private readonly IMediator _mediator;

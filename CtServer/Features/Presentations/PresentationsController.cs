@@ -26,6 +26,7 @@ public class PresentationsController : ControllerBase
     /// Create Presentation
     /// </summary>
     [HttpPost]
+    [Authorize("Admin")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<ActionResult<Create.Success>> Create(WriteModel model, CancellationToken cancellationToken)
     {
@@ -51,6 +52,7 @@ public class PresentationsController : ControllerBase
     /// Edit Presentation
     /// </summary>
     [HttpPut("{id}")]
+    [Authorize("Admin")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Edit(int id, WriteModel model, CancellationToken cancellationToken)
     {
@@ -65,6 +67,7 @@ public class PresentationsController : ControllerBase
     /// Delete Presentation
     /// </summary>
     [HttpDelete("{id}")]
+    [Authorize("Admin")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Delete(int id, CancellationToken cancellationToken)
     {
@@ -79,6 +82,7 @@ public class PresentationsController : ControllerBase
     /// Upload Presentation Attachment (File Upload)
     /// </summary>
     [HttpPost($"{{id}}/{nameof(Attachments)}")]
+    [Authorize("Admin")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> UploadAttachment(int id, IFormFile attachment, CancellationToken cancellationToken)
     {
@@ -108,6 +112,7 @@ public class PresentationsController : ControllerBase
     /// Delete Presentation Attachment
     /// </summary>
     [HttpDelete($"{{id}}/{nameof(Attachments)}")]
+    [Authorize("Admin")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> DeleteAttachment(int id, CancellationToken cancellationToken)
     {
@@ -122,6 +127,7 @@ public class PresentationsController : ControllerBase
     /// Upload Presentation Photo (File Upload)
     /// </summary>
     [HttpPost($"{{id}}/{nameof(Photos)}")]
+    [Authorize("Admin")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> UploadPhoto(int id, IFormFile Photo, CancellationToken cancellationToken)
     {
@@ -162,6 +168,7 @@ public class PresentationsController : ControllerBase
     /// Delete Presentation Photo
     /// </summary>
     [HttpDelete($"{{id}}/{nameof(Photos)}")]
+    [Authorize("Admin")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> DeletePhoto(int id, CancellationToken cancellationToken)
     {

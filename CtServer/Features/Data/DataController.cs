@@ -6,7 +6,7 @@ namespace CtServer.Features.Data;
 [ApiController]
 [Produces("application/json")]
 [Route("api/[controller]")]
-[Authorize]
+[Authorize("Admin")]
 public class DataController : ControllerBase
 {
     private readonly IMediator _mediator;
