@@ -33,4 +33,23 @@ public static class Extensions
     {
         return services.Configure<TOptions>(configuration.GetOptionsSection<TOptions>());
     }
+
+    public static bool TryUpdate<T>(T currentValue, T value, Action<T> set)
+        where T : IEquatable<T>
+    {
+        if (currentValue.Equals(value))
+            return false;
+
+        set(value);
+        return true;
+    }
+
+    public static bool TryUpdate<T>(T[] currentValues, T[] values, Action<T[]> set)
+    {
+        if (currentValues.SequenceEqual(values))
+            return false;
+
+        set(values);
+        return true;
+    }
 }

@@ -45,12 +45,16 @@ public static class Edit
                 (int)entity.Duration.TotalMinutes
             );
 
-            entity.SectionId = request.Model.SectionId;
-            entity.Title = request.Model.Title;
-            entity.Authors = request.Model.Authors;
-            entity.Description = request.Model.Description;
-            entity.Position = request.Model.Position;
-            entity.Duration = TimeSpan.FromMinutes(request.Model.DurationMinutes);
+            bool updated = false;
+
+            updated |= Extensions.TryUpdate(entity.SectionId, request.Model.SectionId, x => entity.SectionId = x);
+            updated |= Extensions.TryUpdate(entity.Title, request.Model.Title, x => entity.Title = x);
+            updated |= Extensions.TryUpdate(entity.Authors, request.Model.Authors, x => entity.Authors = x);
+            updated |= Extensions.TryUpdate(entity.Description, request.Model.Description, x => entity.Description = x);
+            updated |= Extensions.TryUpdate(entity.Position, request.Model.Position, x => entity.Position = x);
+            updated |= Extensions.TryUpdate(entity.Duration, TimeSpan.FromMinutes(request.Model.DurationMinutes), x => entity.Duration = x);
+
+            if (!updated) return new Success();
 
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 

@@ -39,8 +39,12 @@ public static class Edit
                 entity.Name
             );
 
-            entity.EventId = request.Model.EventId;
-            entity.Name = request.Model.Name;
+            bool updated = false;
+
+            updated |= Extensions.TryUpdate(entity.EventId, request.Model.EventId, x => entity.EventId = x);
+            updated |= Extensions.TryUpdate(entity.Name, request.Model.Name, x => entity.Name = x);
+
+            if (!updated) return new Success();
 
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 

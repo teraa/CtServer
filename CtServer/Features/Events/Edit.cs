@@ -40,10 +40,14 @@ public static class Edit
                 entity.EndAt
             );
 
-            entity.Title = request.Model.Title;
-            entity.Description = request.Model.Description;
-            entity.StartAt = request.Model.StartAt;
-            entity.EndAt = request.Model.EndAt;
+            bool updated = false;
+
+            updated |= Extensions.TryUpdate(entity.Title, request.Model.Title, x => entity.Title = x);
+            updated |= Extensions.TryUpdate(entity.Description, request.Model.Description, x => entity.Description = x);
+            updated |= Extensions.TryUpdate(entity.StartAt, request.Model.StartAt, x => entity.StartAt = x);
+            updated |= Extensions.TryUpdate(entity.EndAt, request.Model.EndAt, x => entity.EndAt = x);
+
+            if (!updated) return new Success();
 
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 

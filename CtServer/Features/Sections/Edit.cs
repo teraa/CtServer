@@ -53,13 +53,17 @@ public static class Edit
                 entity.BackgroundColor
             );
 
-            entity.EventId = request.Model.EventId;
-            entity.LocationId = request.Model.LocationId;
-            entity.Title = request.Model.Title;
-            entity.Chairs = request.Model.Chairs;
-            entity.StartAt = request.Model.StartAt;
-            entity.EndAt = request.Model.EndAt;
-            entity.BackgroundColor = request.Model.BackgroundColor;
+            bool updated = false;
+
+            updated |= Extensions.TryUpdate(entity.EventId, request.Model.EventId, x => entity.EventId = x);
+            updated |= Extensions.TryUpdate(entity.LocationId, request.Model.LocationId, x => entity.LocationId = x);
+            updated |= Extensions.TryUpdate(entity.Title, request.Model.Title, x => entity.Title = x);
+            updated |= Extensions.TryUpdate(entity.Chairs, request.Model.Chairs, x => entity.Chairs = x);
+            updated |= Extensions.TryUpdate(entity.StartAt, request.Model.StartAt, x => entity.StartAt = x);
+            updated |= Extensions.TryUpdate(entity.EndAt, request.Model.EndAt, x => entity.EndAt = x);
+            updated |= Extensions.TryUpdate(entity.BackgroundColor, request.Model.BackgroundColor, x => entity.BackgroundColor = x);
+
+            if (!updated) return new Success();
 
             await _ctx.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
