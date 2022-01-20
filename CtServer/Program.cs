@@ -16,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Configure services
 
-builder.Logging.AddSeq();
+builder.Logging.AddSeq(builder.Configuration.GetSection("Seq"));
 
 builder.Services.AddDbContext<CtDbContext>(ctxOpt =>
 {
