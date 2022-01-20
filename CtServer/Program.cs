@@ -16,6 +16,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Configure services
 
+builder.Logging.AddSeq();
+
 builder.Services.AddDbContext<CtDbContext>(ctxOpt =>
 {
     // ctxOpt.ConfigureWarnings(w => w.Throw(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.MultipleCollectionIncludeWarning));
