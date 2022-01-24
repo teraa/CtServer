@@ -47,7 +47,7 @@ public class SeedService
 
         if (seeded) return;
 
-        var now = DateTimeOffset.Now;
+        var now = DateTimeOffset.UtcNow;
 
         var locA = new Location
         {
