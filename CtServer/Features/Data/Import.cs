@@ -31,7 +31,7 @@ public static class Import
                     ?? null!;
             }
 
-            await using (var transaction = await _ctx.Database.BeginTransactionAsync())
+            await using (var transaction = await _ctx.Database.BeginTransactionAsync(cancellationToken))
             {
                 var oldEvents = await _ctx.Events
                     .ToArrayAsync(cancellationToken);
