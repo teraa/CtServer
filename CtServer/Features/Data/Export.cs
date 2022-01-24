@@ -27,33 +27,15 @@ public static class Export
         {
             var events = await _ctx.Events
                 .AsNoTracking()
-                .Select(Events.ReadModel.FromEntity)
-                .ToArrayAsync(cancellationToken)
-                .ConfigureAwait(false);
-
-            var locations = await _ctx.Locations
-                .AsNoTracking()
-                .Select(Locations.ReadModel.FromEntity)
-                .ToArrayAsync(cancellationToken)
-                .ConfigureAwait(false);
-
-            var sections = await _ctx.Sections
-                .AsNoTracking()
-                .Select(Sections.ReadModel.FromEntity)
-                .ToArrayAsync(cancellationToken)
-                .ConfigureAwait(false);
-
-            var presentations = await _ctx.Presentations
-                .AsNoTracking()
-                .Select(Presentations.ReadModel.FromEntity)
-                .ToArrayAsync(cancellationToken)
-                .ConfigureAwait(false);
-
-            var dataModel = new Data.Model(events, locations, sections, presentations);
+                .Include(x => x.Sections)
+                .ThenInclude(x => x.Presentations)
+                .Include(x => x.Locations)
+                .Include(x => x.Notifications)
+                .ToArrayAsync(cancellationToken);
 
             var stream = new MemoryStream();
 
-            await JsonSerializer.SerializeAsync(stream, dataModel, _jsonOptions, cancellationToken)
+            await JsonSerializer.SerializeAsync(stream, events, _jsonOptions, cancellationToken)
                 .ConfigureAwait(false);
 
             stream.Seek(0, SeekOrigin.Begin);

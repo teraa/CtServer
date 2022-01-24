@@ -71,6 +71,7 @@ builder.Services
         {
             new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),
         },
+        ReferenceHandler = ReferenceHandler.Preserve,
     })
     .AddMediatR(typeof(Program))
     .AddFluentValidation(options => options.RegisterValidatorsFromAssemblyContaining(typeof(Program)))
