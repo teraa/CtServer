@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using CtServer;
 using CtServer.Authorization;
+using CtServer.ActionFilters;
 using CtServer.Options;
 using CtServer.Services;
 using FluentValidation.AspNetCore;
@@ -25,7 +26,10 @@ builder.Services.AddDbContext<CtDbContext>(ctxOpt =>
     ctxOpt.UseNpgsql(builder.Configuration["DB_STRING"], npgsqlOpt => npgsqlOpt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
 });
 
-builder.Services.AddControllers()
+builder.Services.AddControllers(options =>
+    {
+        options.Filters.Add<ResultFilter>();
+    })
     .AddJsonOptions(x =>
     {
         x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));

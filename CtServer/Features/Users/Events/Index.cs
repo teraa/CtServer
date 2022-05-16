@@ -1,19 +1,20 @@
+using OneOf;
 using Model = CtServer.Features.Events.ReadModel;
 
 namespace CtServer.Features.Users.Events;
 
 public static class Index
 {
-    public record Query(int UserId) : IRequest<Model[]?>;
+    public record Query(int UserId) : IRequest<OneOf<Model[], NotFound>>;
 
-    public class Handler : IRequestHandler<Query, Model[]?>
+    public class Handler : IRequestHandler<Query, OneOf<Model[], NotFound>>
     {
         private readonly CtDbContext _ctx;
 
         public Handler(CtDbContext ctx)
             => _ctx = ctx;
 
-        public async Task<Model[]?> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<OneOf<Model[], NotFound>> Handle(Query request, CancellationToken cancellationToken)
         {
             var models = await _ctx.Users
                 .AsNoTracking()
@@ -31,7 +32,7 @@ public static class Index
                     .ConfigureAwait(false);
 
                 if (!exists)
-                    return null;
+                    return new NotFound();
             }
 
             return models;
